@@ -1,0 +1,245 @@
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+html {
+  height: -webkit-fill-available;
+}
+
+main {
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100vh;
+  height: -webkit-fill-available;
+  max-height: 100vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.bi {
+  vertical-align: -0.125em;
+  pointer-events: none;
+  fill: currentColor;
+}
+
+.dropdown-toggle {
+  outline: 0;
+}
+
+.nav-flush .nav-link {
+  border-radius: 0;
+}
+
+.btn-toggle {
+  display: inline-flex;
+  align-items: flex-start;
+  padding: 0.25rem 0.5rem 0.25rem 0;
+  font-weight: 600;
+  color: $dark;
+  background-color: transparent;
+  border: 0;
+  width: 100%;
+  i {
+    font-size: 1.2rem;
+  }
+  &:hover {
+    color: $primary;
+  }
+}
+
+.btn-link {
+  color: $dark;
+  padding-left: 0;
+  text-decoration: none;
+  i {
+    font-size: 1.2rem;
+  }
+  &:hover {
+    color: $primary;
+  }
+}
+
+.btn-toggle-nav {
+  padding-left: 50px;
+  a {
+    color: $dark;
+    &:hover {
+      background-color: $secondary !important;
+      color: $scolor !important;
+    }
+  }
+  a.active {
+    color: $scolor;
+    font-weight: 500;
+    background-color: $secondary !important;
+  }
+}
+
+.btn-toggle-nav a {
+  display: inline-flex;
+  justify-content: flex-start;
+  padding: 0.1875rem 0.5rem;
+  margin-top: 0.125rem;
+  margin-left: 0;
+  text-decoration: none;
+}
+.btn-toggle-nav a:hover,
+.btn-toggle-nav a:focus {
+  background-color: #d2f4ea;
+}
+
+.scrollarea {
+  overflow-y: auto;
+}
+
+.fw-semibold {
+  font-weight: 600;
+}
+.lh-tight {
+  line-height: 1.25;
+}
+
+.main-sidebar {
+  border-right: 1.5px solid #cfd3d8;
+  max-height: 100dvh !important;
+  position: sticky;
+  left: 0;
+  top: 0;
+  .header {
+    img {
+      height: 30px;
+    }
+  }
+
+  .sidebar-menu {
+    max-height: calc(100dvh - 94px);
+    overflow-y: auto;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.03); // optional hover effect
+    }
+
+    /* WebKit Scrollbar */
+    &::-webkit-scrollbar {
+      width: 0px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #a6b1bb00;
+      border-radius: 10px;
+      visibility: hidden;
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+      visibility: visible;
+    }
+
+    scrollbar-width: none;
+    scrollbar-color: #1465b1 transparent;
+  }
+
+  .btn-toggle::after {
+    content: "\f282"; /* Bootstrap Icon: chevron-down */
+    font-family: "Bootstrap-icons";
+    float: right;
+    margin-left: auto;
+    transition: transform 0.3s ease;
+  }
+
+  /* Rotate arrow when open */
+  .btn-toggle[aria-expanded="true"]::after {
+    transform: rotate(180deg);
+  }
+
+  .border-bottom {
+    border-bottom: 1.5px solid #cfd3d8 !important;
+  }
+}
+
+nav {
+  border-bottom: 1.5px solid #cfd3d8 !important;
+  height: 72px;
+
+  .dropdown-toggle::after {
+    display: none;
+  }
+  .bi {
+    color: darken($pholder, 10%);
+    font-size: 1.7rem !important;
+  }
+
+  .dropdown-menu {
+    border: none;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    .uname {
+      font-weight: 600;
+      color: $body;
+      text-align: center;
+    }
+    .role {
+      font-size: 0.75rem;
+      color: $primary;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .dropdown-item {
+      font-size: 0.875rem;
+      color: $body;
+      &:hover {
+        color: $primary;
+      }
+      i {
+        font-size: 1.1rem;
+      }
+    }
+
+    .dropdown-item:active,
+    .dropdown-item:focus {
+      background-color: transparent !important;
+      color: inherit !important;
+    }
+  }
+}
+
+#fullscreenToggle {
+  margin-left: -10px;
+  i {
+    font-size: 1.5rem !important;
+  }
+}
+.nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  font-size: 1.1rem; /* consistent icon size */
+  color: #6c757d; /* Bootstrap text-secondary */
+  position: relative;
+  border-radius: 50%;
+  margin-left: -5px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-icon:hover {
+  background-color: rgba(0, 0, 0, 0.05); /* subtle hover */
+}
+
+.notif-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  background-color: #dc3545;
+  border-radius: 50%;
+  border: 2px solid white;
+}

@@ -1,0 +1,37 @@
+$primary: #1b7e87;
+$bg: #e1eefd;
+$dark: #203a33;
+$secondary: #d4fcff;
+$scolor: #125f9e;
+$body: #697472;
+$light: #f9f9f9;
+$lcolor: #0a1712;
+$white: #ffffff;
+$pholder: #a19fc1;
+
+// fonts
+$font: "Inter";
+
+// responsive media sizes
+@mixin large {
+  @media screen and (max-width: 1200px) {
+    @content;
+  }
+}
+@mixin medium {
+  @media screen and (max-width: 991px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media screen and (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin phone {
+  @media screen and (max-width: 576px) {
+    @content;
+  }
+}
