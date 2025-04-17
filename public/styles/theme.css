@@ -287,6 +287,9 @@ nav .dropdown-menu .dropdown-item:focus {
   margin-left: -5px;
   transition: background-color 0.2s ease;
 }
+.nav-icon i {
+  font-size: 1.4rem !important;
+}
 
 .nav-icon:hover {
   background-color: rgba(0, 0, 0, 0.05); /* subtle hover */

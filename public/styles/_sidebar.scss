@@ -227,6 +227,10 @@ nav {
   border-radius: 50%;
   margin-left: -5px;
   transition: background-color 0.2s ease;
+
+  i {
+    font-size: 1.4rem !important;
+  }
 }
 
 .nav-icon:hover {
