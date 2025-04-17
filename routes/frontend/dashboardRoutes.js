@@ -12,6 +12,7 @@ router.get("/dashboard", protectDashboard, (req, res) => {
   console.log(req.user);
   res.render("dashboard", {
     path: "/dashboard",
+    pagePath: "/dashboard",
     title: "dashboard",
     user: req.user,
   });

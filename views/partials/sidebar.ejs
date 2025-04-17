@@ -1,6 +1,6 @@
 <div
   class="flex-shrink-0 p-3 main-sidebar"
-  style="width: 280px"
+ 
   bis_skin_checked="1"
 >
   <div class="header">
@@ -14,7 +14,7 @@
   <ul class="list-unstyled ps-0 sidebar-menu">
     <li class="mb-1">
       <button class="btn align-items-center rounded btn-link" <%= path === '/dashboard' ? '' : 'onclick="todashboard()"' %>>
-        <i class="bi bi-house-door me-3"></i>Dashboard
+        <i class="bi bi-house-door me-3"></i><%-__('dashboard')%>
       </button>
     </li>
     <li class="mb-1">
@@ -24,9 +24,9 @@
         data-bs-target="#products-collapse"
         aria-expanded="false"
       >
-        <i class="bi bi-box me-3"></i>Products & Commodities
+        <i class="bi bi-box me-3"></i><%-__('products_and_commodities')%>
       </button>
-      <div class="collapse show" id="products-collapse" bis_skin_checked="1">
+      <div class="collapse" id="products-collapse" bis_skin_checked="1">
         <ul class="btn-toggle-nav fw-normal pb-1 small">
           <li><a href="#" class="rounded active"><%-__('add_new_products')%></a></li>
           <li><a href="#" class="rounded"><%-__('view_products')%></a></li> 
@@ -40,7 +40,7 @@
         data-bs-target="#inventory-collapse"
         aria-expanded="false"
       >
-        <i class="bi bi-clipboard-data me-3"></i> Inventory  
+        <i class="bi bi-clipboard-data me-3"></i><%-__('inventory')%>   
       </button>
       <div class="collapse " id="inventory-collapse" bis_skin_checked="1">
         <ul class="btn-toggle-nav fw-normal pb-1 small">
@@ -57,7 +57,7 @@
         data-bs-target="#customer-collapse"
         aria-expanded="false"
       >
-        <i class="bi bi-person-badge me-3"></i> Customers 
+        <i class="bi bi-person-badge me-3"></i> <%-__('customers')%> 
       </button>
       <div class="collapse " id="customer-collapse" bis_skin_checked="1">
         <ul class="btn-toggle-nav fw-normal pb-1 small">
@@ -74,7 +74,7 @@
         data-bs-target="#offers-collapse"
         aria-expanded="false"
       >
-      <i class="bi bi-list-task me-3"></i> Offers & Orders
+      <i class="bi bi-list-task me-3"></i> <%-__('offers_and_orders')%>
       </button>
       <div class="collapse " id="offers-collapse" bis_skin_checked="1">
         <ul class="btn-toggle-nav fw-normal pb-1 small">
@@ -92,7 +92,7 @@
         data-bs-target="#invoices-collapse"
         aria-expanded="false"
       >
-      <i class="bi bi-receipt me-3"></i> Invoice & Document
+      <i class="bi bi-receipt me-3"></i><%-__('invoice_and_document')%> 
       </button>
       <div class="collapse " id="invoices-collapse" bis_skin_checked="1">
         <ul class="btn-toggle-nav fw-normal pb-1 small">
@@ -110,7 +110,7 @@
         data-bs-target="#delivery-collapse"
         aria-expanded="false"
       >
-      <i class="bi bi-truck me-3"></i> Delivery & Fulfillment
+      <i class="bi bi-truck me-3"></i> <%-__('delivery_and_fulfillment')%>
       </button>
       <div class="collapse " id="delivery-collapse" bis_skin_checked="1">
         <ul class="btn-toggle-nav fw-normal pb-1 small">
@@ -120,7 +120,7 @@
         </ul>
       </div>
     </li>
-
+    <% if (user && (user.role === 'admin' || user.role === 'superadmin')) { %>
     <li class="mb-1">
       <button
         class="btn btn-toggle align-items-center rounded collapsed"
@@ -128,16 +128,15 @@
         data-bs-target="#users-collapse"
         aria-expanded="false"
       >
-      <i class="bi bi-person-circle me-3"></i> User managment
+      <i class="bi bi-person-circle me-3"></i><%-__('user_managment')%> 
       </button>
-      <div class="collapse " id="users-collapse" bis_skin_checked="1">
+      <div class="collapse <%= path === '/admin-users' ? 'show' : '' %>" id="users-collapse" bis_skin_checked="1">
         <ul class="btn-toggle-nav fw-normal pb-1 small">
-          <li><a href="#" class="rounded"><%-__('storage')%></a></li> 
-          <li><a href="#" class="rounded"><%-__('waybills')%></a></li> 
-          <li><a href="#" class="rounded"><%-__('storage_members')%></a></li> 
+          <li><a href="<%= pagePath === '/add-admin-users' ? '#' : '/add-admin-users' %>" class="rounded <%= pagePath === '/add-admin-users' ? 'active' : '' %>"><%-__('add_new_user')%></a></li> 
+          <li><a href="<%= pagePath === '/admin-users' ? '#' : '/admin-users' %>" class="rounded <%= pagePath === '/admin-users' ? 'active' : '' %>"><%-__('all_users')%></a></li>  
         </ul>
       </div>
     </li>
-
-  </ul>
+    <% } %>
+  </ul>  
 </div>

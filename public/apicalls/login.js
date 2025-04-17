@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    alert();
+
     const email = emailInput.value.trim();
     const password = passwordInput.value.trim();
 

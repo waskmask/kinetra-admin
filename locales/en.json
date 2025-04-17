@@ -45,5 +45,22 @@
   "user_management": "User Management",
   "profile": "Profile",
   "logout": "Logout",
-  "change_password": "Change password"
+  "change_password": "Change password",
+  "user_managment": "User managment",
+  "add_new_user": "Add new user",
+  "all_users": "All users",
+  "admin_users": "Admin users",
+  "add-admin-users": "Add admin users",
+  "add-admin-user": "Add admin user",
+  "add_user": "Add user",
+  "full_name": "Full name",
+  "phone": "Phone number",
+  "select_role": "Select a role",
+  "superadmin": "Super admin",
+  "admin": "Admin",
+  "moderator": "Moderator",
+  "sales": "Sales",
+  "active": "Active",
+  "save": "Save",
+  "accounts": "Accounts"
 }

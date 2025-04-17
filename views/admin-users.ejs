@@ -1,6 +1,6 @@
 <html lang="<%- __('lang') %>">
   <head>
-    <%- include('partials/head', { title: __('dashboard') }) %>
+    <%- include('partials/head', { title: __('admin_users') }) %>
   </head>
   <body class="d-flex flex-column min-vh-100">
     <div class="d-flex flex-grow-1">
@@ -12,7 +12,15 @@
         <%- include('partials/navbar') %>
 
         <!-- Main content -->
-        <main class="flex-grow-1 container py-4 main"></main>
+        <main class="flex-grow-1 container py-4 main">
+          <div class="row">
+            <div class="col">
+              <div class="card">
+                <div class="card-body">Hello</div>
+              </div>
+            </div>
+          </div>
+        </main>
 
         <!-- Footer -->
         <%- include('partials/footer') %>

@@ -1,6 +1,9 @@
 const AdminUser = require("../modals/AdminUser");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken");
+const nodemailer = require("nodemailer");
+const fs = require("fs").promises;
+const path = require("path");
 
 // Register Admin
 exports.register = async (req, res) => {
@@ -22,6 +25,48 @@ exports.register = async (req, res) => {
       isActive,
     });
 
+    // Prepare email
+    try {
+      // Load email template
+      const templatePath = path.join(
+        __dirname,
+        "../emails/admin-registered.html"
+      );
+      let emailTemplate = await fs.readFile(templatePath, "utf-8");
+
+      // Replace placeholders
+      emailTemplate = emailTemplate
+        .replace("{name}", name)
+        .replace("{email}", email)
+        .replace("{role}", role);
+
+      // Nodemailer transporter
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_SERVER,
+        port: process.env.SMTP_PORT,
+        secure: process.env.SMTP_PORT === "465", // Use SSL for port 465, TLS for 587
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.PASS,
+        },
+      });
+
+      // Email options
+      const mailOptions = {
+        from: `"Kinetra Admin" <${process.env.SMTP_USER}>`,
+        to: email,
+        subject: "Welcome to Kinetra Admin Panel",
+        html: emailTemplate,
+      };
+
+      // Send email
+      await transporter.sendMail(mailOptions);
+      console.log(`Email sent successfully to ${email} with role ${role}`);
+    } catch (emailError) {
+      console.error(`Failed to send email to ${email}:`, emailError);
+      // Continue with account creation despite email failure
+    }
+
     res
       .status(201)
       .json({ success: true, message: "Admin user created", id: user._id });
@@ -31,16 +76,6 @@ exports.register = async (req, res) => {
 };
 
 // Login Admin
-// exports.login = async (req, res) => {
-//   const user = req.user;
-//   const token = generateToken(user);
-//   const sanitizedUser = user.toObject();
-//   delete sanitizedUser.password;
-//   res
-//     .status(200)
-//     .json({ message: "Login successful", token, user: sanitizedUser });
-// };
-
 exports.login = async (req, res) => {
   const user = req.user;
 
@@ -48,7 +83,7 @@ exports.login = async (req, res) => {
   const sanitizedUser = user.toObject();
   delete sanitizedUser.password;
 
-  // ✅ Set secure cookie
+  // Set secure cookie
   res.cookie("token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -59,7 +94,7 @@ exports.login = async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Login successful",
-    token, // still useful for Postman/mobile
+    token,
     user: sanitizedUser,
   });
 };
@@ -84,7 +119,7 @@ exports.changePassword = async (req, res, next) => {
     const isSelf = requester._id.toString() === userId;
     const isAllowedAdmin = ["superadmin", "admin"].includes(requester.role);
 
-    // ✅ Only allow self OR superadmin/admin to change password
+    // Only allow self OR superadmin/admin to change password
     if (!isSelf && !isAllowedAdmin) {
       console.log("❌ Not authorized to change this password");
       return res
@@ -95,18 +130,17 @@ exports.changePassword = async (req, res, next) => {
     const hashed = await bcrypt.hash(newPassword, 10);
     targetUser.password = hashed;
 
-    // 🔁 Invalidate all previous tokens
+    // Invalidate all previous tokens
     targetUser.tokenVersion += 1;
 
-    // 📝 (Optional) Audit log example — add this if needed
+    // Audit log
     const logEntry = {
       reset_by: requester._id,
       reset_by_role: isSelf ? "self" : requester.role,
       timestamp: new Date(),
     };
 
-    // Keep last 19, add this — if you want similar logging
-    targetUser.password_reset_logs =
+    targetUser.password_Reset_logs =
       targetUser.password_reset_logs?.slice(-19) || [];
     targetUser.password_reset_logs.push(logEntry);
 

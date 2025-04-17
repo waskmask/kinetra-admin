@@ -6,15 +6,10 @@ body {
 html {
   height: -webkit-fill-available;
 }
-
-main {
-  display: flex;
-  flex-wrap: nowrap;
-  height: 100vh;
-  height: -webkit-fill-available;
-  max-height: 100vh;
-  overflow-x: auto;
-  overflow-y: hidden;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 .bi {
@@ -47,7 +42,10 @@ main {
     color: $primary;
   }
 }
-
+.btn-toggle,
+.btn-link {
+  font-weight: 600 !important;
+}
 .btn-link {
   color: $dark;
   padding-left: 0;
@@ -103,9 +101,7 @@ main {
 .main-sidebar {
   border-right: 1.5px solid #cfd3d8;
   max-height: 100dvh !important;
-  position: sticky;
-  left: 0;
-  top: 0;
+
   .header {
     img {
       height: 30px;
@@ -164,8 +160,9 @@ main {
 
 nav {
   border-bottom: 1.5px solid #cfd3d8 !important;
-  height: 72px;
+  height: 64px;
 
+  background-color: $bg;
   .dropdown-toggle::after {
     display: none;
   }
