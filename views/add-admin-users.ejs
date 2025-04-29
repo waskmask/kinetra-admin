@@ -11,7 +11,7 @@
       <!-- Navbar -->
       <%- include('partials/navbar') %>
       <section class="page-titel px-mp mt-3 w-100">
-        <div class="p-title"><%-__('add-admin-users')%></div>
+        <div class="p-title mb-4"><%-__('add-admin-users')%></div>
       </section>
 
       <section class="content px-25 pb-5">
@@ -19,16 +19,17 @@
           <div class="row">
             <div class="col-lg-5">
               <div class="card border-0">
-                <div class="card-body p-4">
-                  <h6><%-__('add_user')%></h6>
-                  <form action="">
-                    <div class="mb-2">
+                <div class="card-body p-45">
+                  <h6 class="mb-3"><%-__('add_user')%></h6>
+
+                  <form id="registerAdmin">
+                    <div class="mb-3">
                       <label for="name" class="form-label">
                         <%-__('full_name')%>
                       </label>
                       <input type="text" class="form-control" id="name" />
                     </div>
-                    <div class="mb-2">
+                    <div class="mb-3">
                       <label for="email" class="form-label">
                         <%-__('email')%>
                       </label>
@@ -41,7 +42,7 @@
                       <input type="text" class="form-control" id="phone" />
                     </div>
 
-                    <div class="mb-2">
+                    <div class="mb-3">
                       <label class="form-label"><%= __("select_role") %></label>
                       <select id="role">
                         <option value="" disabled selected hidden>
@@ -55,6 +56,16 @@
                         <option value="sales"><%-__('sales')%></option>
                         <option value="storage"><%-__('storage')%></option>
                         <option value="accounts"><%-__('accounts')%></option>
+                      </select>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label"><%= __("country") %></label>
+                      <select id="country">
+                        <option value="" disabled selected hidden>
+                          <%- __('country') %>
+                        </option>
+                        <%- include('partials/_countriesOptions') %>
                       </select>
                     </div>
 
@@ -82,7 +93,7 @@
                     </div>
 
                     <button
-                      id="updateUserButton"
+                      id="addUserButton"
                       class="btn btn-primary m-w-half mt-4 mb-2"
                     >
                       <%= __("save") %>
@@ -99,12 +110,31 @@
       <%- include('partials/footer') %>
     </main>
 
+    <script>
+      window.translations = {
+        email_already_exists: "<%-__('email_already_exists')%>",
+        registration_failed: "<%-__('registration_failed')%>",
+        name_required: "<%-__('name_required')%>",
+        email_required: "<%-__('email_required')%>",
+        phone_required: "<%-__('phone_required')%>",
+        role_required: "<%-__('role_required')%>",
+        country_required: "<%-__('country_required')%>",
+        password_required: "<%-__('password_required')%>",
+        error_invalid_email: "<%-__('error_invalid_email')%>",
+        loading: "<%-__('loading')%>",
+        save: "<%-__('save')%>",
+        registration_success: "<%-__('registration_success')%>",
+        registration_failed: "<%-__('registration_failed')%>",
+        email_already_exists: "<%-__('email_already_exists')%>",
+      };
+    </script>
     <!-- javascript -->
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
       integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js"
       integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
@@ -118,6 +148,13 @@
           select: "#role",
           settings: {
             placeholderText: "<%-__('select_role')%>",
+            showSearch: false,
+          },
+        });
+        new SlimSelect({
+          select: "#country",
+          settings: {
+            placeholderText: "<%-__('country')%>",
             showSearch: false,
           },
         });
@@ -143,8 +180,9 @@
             isPasswordVisible = false;
           }
         });
+        lucide.createIcons();
       });
-      lucide.createIcons();
     </script>
+    <script type="module" src="/public/apicalls/registerAdmin.js"></script>
   </body>
 </html>

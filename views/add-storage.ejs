@@ -1,0 +1,166 @@
+<html lang="<%- __('lang') %>">
+  <head>
+    <%- include('partials/head', { title: __('add_storage') }) %>
+  </head>
+  <body class="dash-body min-vh-100">
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <!-- Main content -->
+    <main class="position-relative">
+      <!-- Navbar -->
+      <%- include('partials/navbar') %>
+      <section class="page-titel px-mp mt-3 w-100">
+        <div class="p-title mb-4"><%-__('add_storage')%></div>
+      </section>
+
+      <section class="content px-25 pb-5">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-5">
+              <div class="card border-0">
+                <div class="card-body p-45">
+                  <h6 class="mb-3"><%-__('storage_details')%></h6>
+
+                  <form id="addStorageForm">
+                    <!-- Storage Name -->
+                    <div class="mb-3">
+                      <label for="storage_name" class="form-label">
+                        <%= __("storage_label") %>
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="storage_name"
+                      />
+                    </div>
+
+                    <!-- Address Section -->
+                    <div class="form-title mb-2 mt-3">
+                      <%= __("storage_address") %>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label" for="street_address">
+                        <%= __("street") %>
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="street_address"
+                      />
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label" for="city"
+                          ><%= __("city") %></label
+                        >
+                        <input type="text" class="form-control" id="city" />
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label" for="postal_code">
+                          <%= __("postal_code") %>
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="postal_code"
+                        />
+                      </div>
+
+                      <div class="col mb-3">
+                        <label class="form-label"><%= __("country") %></label>
+                        <select id="country">
+                          <option value="" disabled selected hidden>
+                            <%- __('country') %>
+                          </option>
+                          <%- include('partials/_countriesOptions') %>
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- Add Members -->
+                    <div class="mb-3">
+                      <label class="form-label"><%= __("add_members") %></label>
+                      <select id="users" multiple>
+                        <% admin_users.forEach(user => { %>
+                        <option value="<%= user._id %>">
+                          <%= user.name %> (<%= user.role %>)
+                        </option>
+                        <% }) %>
+                      </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button
+                      id="addStorageButton"
+                      class="btn btn-primary m-w-half mt-4 mb-2"
+                    >
+                      <%= __("save") %>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <%- include('partials/footer') %>
+    </main>
+
+    <script>
+      window.translations = {
+        storage_created: "<%-__('storage_created')%>",
+        storage_required_fields: "<%-__('storage_required_fields')%>",
+        registration_failed: "<%-__('registration_failed')%>",
+        server_error: "<%-__('server_error')%>",
+        loading: "<%-__('loading')%>",
+        save: "<%-__('save')%>",
+        name_required: "<%-__('name_required')%>",
+        street_address_required: "<%-__('street_address_required')%>",
+        postal_code_required: "<%-__('postal_code_required')%>",
+        city_required: "<%-__('city_required')%>",
+        country_required: "<%-__('country_required')%>",
+        users_required: "<%-__('users_required')%>",
+        field_required: "<%-__('field_required')%>",
+      };
+    </script>
+    <!-- javascript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js"
+      integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/public/js/theme.js"></script>
+
+    <script>
+      new SlimSelect({
+        select: "#country",
+        settings: {
+          placeholderText: "<%-__('select_country')%>",
+          showSearch: true,
+        },
+      });
+      new SlimSelect({
+        select: "#users",
+        settings: {
+          placeholderText: "<%-__('select_users')%>",
+          showSearch: true,
+        },
+      });
+
+      lucide.createIcons();
+    </script>
+    <script type="module" src="/public/apicalls/add-storage.js"></script>
+  </body>
+</html>

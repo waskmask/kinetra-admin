@@ -7,7 +7,7 @@ const protectDashboard = async (req, res, next) => {
   const token = req.cookies?.token;
 
   if (!token) {
-    return res.redirect("/login");
+    return res.redirect("/");
   }
 
   try {
@@ -24,7 +24,7 @@ const protectDashboard = async (req, res, next) => {
     // 🔐 Check if role is allowed
     if (!user || !ALLOWED_ROLES.includes(user.role)) {
       res.clearCookie("token");
-      return res.redirect("/login");
+      return res.redirect("/");
     }
 
     // ✅ Attach user to request so we can use in EJS
@@ -34,7 +34,7 @@ const protectDashboard = async (req, res, next) => {
   } catch (error) {
     console.error("❌ protectDashboard middleware failed:", error.message);
     res.clearCookie("token");
-    return res.redirect("/login");
+    return res.redirect("/");
   }
 };
 
@@ -43,7 +43,7 @@ const protectByRoles = (allowedRoles = []) => {
     const token = req.cookies?.token;
 
     if (!token) {
-      return res.redirect("/login");
+      return res.redirect("/");
     }
 
     try {

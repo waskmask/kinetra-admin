@@ -9,11 +9,18 @@ const cors = require("cors");
 const path = require("path");
 const adminRoutes = require("./routes/adminAuthRoutes");
 const adminUserRoutes = require("./routes/adminUserRoutes");
+const productRoutes = require("./routes/productRoutes");
+const storageRoutes = require("./routes/storageRoutes");
+
+// frontend routes
 const frontentAuthRoutes = require("./routes/frontend/authRoutes");
 const frontentdashboardRoutes = require("./routes/frontend/dashboardRoutes");
+const frontentProductsRoutes = require("./routes/frontend/productsRoutes");
+const frontentStorageRoutes = require("./routes/frontend/storageRoutes");
+
+// i18n
 const acceptedLanguages = i18n.getLocales();
 dotenv.config();
-connectDB();
 
 const app = express();
 
@@ -65,13 +72,33 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(passport.initialize());
 
+app.get("/ping", (req, res) => {
+  return res.json({ success: true, dbConnected: global.dbConnected || false });
+});
+
+// Block all routes if DB is offline
+app.use((req, res, next) => {
+  if (req.path === "/ping") return next(); // allow /ping even if offline
+  if (global.dbConnected === false) {
+    return res.status(503).json({
+      success: false,
+      message: "You are offline. Please try again later.",
+    });
+  }
+  next();
+});
+
 //api routes
 app.use("/api/admin", adminRoutes);
 app.use("/api/admin-users", adminUserRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/storage", storageRoutes);
 
 //frontend admin routes
 app.use(frontentAuthRoutes);
 app.use(frontentdashboardRoutes);
+app.use(frontentProductsRoutes);
+app.use(frontentStorageRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
@@ -108,6 +135,19 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+
+const startServer = async () => {
+  try {
+    await connectDB();
+    console.log("✅ MongoDB connected");
+  } catch (err) {
+    console.error("❌ MongoDB error:", err.message);
+    console.warn("⚠️ Starting server without DB connection (offline mode)");
+  }
+
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+};
+
+startServer();

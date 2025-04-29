@@ -1,0 +1,166 @@
+<html lang="<%- __('lang') %>">
+  <head>
+    <%- include('partials/head', { title: __('add_products') }) %>
+  </head>
+  <body class="dash-body min-vh-100">
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <!-- Main content -->
+    <main class="position-relative">
+      <!-- Navbar -->
+      <%- include('partials/navbar') %>
+      <section class="page-titel px-mp mt-3 w-100">
+        <div class="p-title mb-4"><%-__('add_products')%></div>
+      </section>
+
+      <section class="content px-25 pb-5">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-5">
+              <div class="card border-0">
+                <div class="card-body p-45">
+                  <h6 class="mb-3"><%-__('product_details')%></h6>
+
+                  <form id="addProduct">
+                    <div class="mb-3">
+                      <label class="form-label"
+                        ><%= __("product_category") %></label
+                      >
+                      <select id="category">
+                        <option selected value="liquid">
+                          <%-__('liquid')%>
+                        </option>
+                        <option value="solid"><%-__('solid')%></option>
+                      </select>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="product_name" class="form-label">
+                        <%-__('product_name')%>
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="product_name"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label for="product_grade" class="form-label">
+                        <%-__('product_grade')%>
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="product_grade"
+                      />
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label"><%= __("unit_type") %></label>
+                      <select id="unit_type">
+                        <option value="" disabled selected hidden>
+                          <%- __('unit_type') %>
+                        </option>
+                        <option value="M3"><%-__('m3')%></option>
+                        <option value="Ltr"><%-__('ltr')%></option>
+                        <option value="MT"><%-__('mt')%></option>
+                        <option value="KG"><%-__('kg')%></option>
+                        <option value="TONS"><%-__('tons')%></option>
+                      </select>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="product_price" class="form-label">
+                        <%-__('product_price')%>
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="product_price"
+                      />
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label"><%= __("origin") %></label>
+                      <select id="origin">
+                        <option value="" disabled selected hidden>
+                          <%- __('origin') %>
+                        </option>
+                        <%- include('partials/_countriesOptions') %>
+                      </select>
+                    </div>
+
+                    <button
+                      id="addProductButton"
+                      class="btn btn-primary m-w-half mt-4 mb-2"
+                    >
+                      <%= __("save") %>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <%- include('partials/footer') %>
+    </main>
+
+    <script>
+      window.translations = {
+        invalid_price_format: "<%-__('invalid_price_format')%>",
+        registration_failed: "<%-__('registration_failed')%>",
+        product_name_required: "<%-__('product_name_required')%>",
+        product_grade_req: "<%-__('product_grade_req')%>",
+        select_unit_type: "<%-__('select_unit_type')%>",
+        product_price_req: "<%-__('product_price_req')%>",
+        product_added: "<%-__('product_added')%>",
+        loading: "<%-__('loading')%>",
+        save: "<%-__('save')%>",
+      };
+    </script>
+    <!-- javascript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js"
+      integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/public/js/theme.js"></script>
+
+    <script>
+      new SlimSelect({
+        select: "#category",
+        settings: {
+          placeholderText: "<%-__('select_category')%>",
+          showSearch: false,
+        },
+      });
+      new SlimSelect({
+        select: "#unit_type",
+        settings: {
+          placeholderText: "<%-__('select_unit_type')%>",
+          showSearch: false,
+        },
+      });
+
+      new SlimSelect({
+        select: "#origin",
+        settings: {
+          placeholderText: "<%-__('origin')%>",
+          showSearch: false,
+        },
+      });
+      lucide.createIcons();
+    </script>
+    <script type="module" src="/public/apicalls/add-products.js"></script>
+  </body>
+</html>

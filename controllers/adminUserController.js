@@ -8,10 +8,11 @@ exports.getAllAdmins = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const search = req.query.search?.trim() || "";
-    const order = req.query.order || "createdAt"; // default sort field
-    const dir = req.query.dir === "asc" ? 1 : -1; // ascending or descending
+    const order = req.query.order || "createdAt";
+    const dir = req.query.dir === "asc" ? 1 : -1;
+    const exclude = req.query.exclude;
 
-    // ✅ Build MongoDB search filter
+    // Build MongoDB search filter
     const filter = search
       ? {
           $or: [
@@ -22,7 +23,11 @@ exports.getAllAdmins = async (req, res) => {
         }
       : {};
 
-    // ✅ Fetch paginated and sorted data
+    // Exclude current user from table
+    if (exclude) {
+      filter._id = { $ne: exclude };
+    }
+
     const [admins, total] = await Promise.all([
       AdminUser.find(filter)
         .sort({ [order]: dir })
@@ -51,7 +56,7 @@ exports.getAllAdmins = async (req, res) => {
 exports.updateAdminUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { email, name, phone, isActive } = req.body;
+    const { email, name, phone, country, role, isActive } = req.body;
 
     const adminToUpdate = await AdminUser.findById(id);
     if (!adminToUpdate) {
@@ -65,6 +70,8 @@ exports.updateAdminUser = async (req, res) => {
     if (email !== undefined) adminToUpdate.email = email;
     if (name !== undefined) adminToUpdate.name = name;
     if (phone !== undefined) adminToUpdate.phone = phone;
+    if (country !== undefined) adminToUpdate.country = country;
+    if (role !== undefined) adminToUpdate.role = role;
     if (isActive !== undefined) adminToUpdate.isActive = isActive;
 
     await adminToUpdate.save();

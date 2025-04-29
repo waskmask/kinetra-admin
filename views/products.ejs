@@ -4,7 +4,7 @@
       href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css"
       rel="stylesheet"
     />
-    <%- include('partials/head', { title: __('admin_users') }) %>
+    <%- include('partials/head', { title: __('all_products') }) %>
   </head>
   <body class="dash-body min-vh-100">
     <!-- Sidebar -->
@@ -15,8 +15,8 @@
       <!-- Navbar -->
       <%- include('partials/navbar') %>
       <section class="page-titel px-mp mt-3 mb-4 w-100">
-        <button class="btn btn-primary" onclick="toAddNewAdmin()">
-          <%-__('add_new_user')%>
+        <button class="btn btn-primary" onclick="toAddNewProducts()">
+          <%-__('add_new_product')%>
         </button>
       </section>
 
@@ -26,9 +26,9 @@
             <div class="col">
               <div class="card border-0">
                 <div class="card-body p-4">
-                  <h6><%-__('admin_users')%></h6>
+                  <h6><%-__('products')%></h6>
 
-                  <div id="adminUsersTable"></div>
+                  <div id="productsTable"></div>
                 </div>
               </div>
             </div>
@@ -41,7 +41,13 @@
     </main>
 
     <script>
+      window.products = JSON.parse(
+        decodeURIComponent(
+          "<%- encodeURIComponent(JSON.stringify(products || [])) %>"
+        )
+      );
       window.translations = {
+        search: "<%-__('search')%>",
         next: "<%-__('next')%>",
         previous: "<%-__('previous')%>",
         showing: "<%-__('showing')%>",
@@ -63,17 +69,15 @@
     <script src="/public/js/theme.js"></script>
 
     <script>
-      function toAddNewAdmin() {
-        window.location.href = "/add-admin-users";
+      function toAddNewProducts() {
+        window.location.href = "/add-products";
       }
       document.addEventListener("DOMContentLoaded", () => {
         lucide.createIcons();
       });
     </script>
-    <script>
-      const loggedInUserId = "<%= user._id %>";
-    </script>
+
     <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
-    <script type="module" src="/public/apicalls/adminUsersGrid.js"></script>
+    <script type="module" src="/public/apicalls/productsGrid.js"></script>
   </body>
 </html>

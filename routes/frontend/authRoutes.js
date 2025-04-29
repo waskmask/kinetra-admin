@@ -17,7 +17,7 @@ const {
 const API_BASE_URL = process.env.API_BASE_URL;
 
 // login page
-router.get("/login", redirectIfLoggedIn, (req, res) => {
+router.get("/", redirectIfLoggedIn, (req, res) => {
   res.render("login", {
     path: "/login",
     title: "login",
@@ -26,8 +26,8 @@ router.get("/login", redirectIfLoggedIn, (req, res) => {
 
 //logout
 router.get("/logout", (req, res) => {
-  res.clearCookie("token"); // Clear HttpOnly token
-  res.redirect("/login");
+  res.clearCookie("token");
+  res.redirect("/");
 });
 
 //loggedIn admin user
@@ -76,7 +76,30 @@ router.get(
   }
 );
 
-// admin users
+// admin user proxy route
+router.get(
+  "/admin-users/grid-data",
+  protectByRoles(["admin", "superadmin"]),
+  async (req, res) => {
+    try {
+      const query = new URLSearchParams(req.query).toString();
+      const response = await axios.get(
+        `${API_BASE_URL}/admin-users/all?${query}`,
+        {
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${req.cookies.token}` },
+        }
+      );
+
+      res.json(response.data);
+    } catch (error) {
+      console.error("❌ Proxy error for Grid.js:", error.message);
+      res.status(500).json({ success: false, message: "Grid fetch failed" });
+    }
+  }
+);
+
+// add admin users
 router.get(
   "/add-admin-users",
   protectByRoles(["admin", "superadmin"]),
@@ -93,6 +116,49 @@ router.get(
         path: "/admin-users",
         user: req.user,
         title: "add_new_user",
+      });
+    }
+  }
+);
+
+// single admin user
+router.get(
+  "/admin-users/:id",
+  protectByRoles(["admin", "superadmin"]),
+  async (req, res) => {
+    const { id } = req.params;
+
+    // Prevent viewing yourself
+    if (req.user._id === id) {
+      return res.redirect("/admin-users"); // or render with an error
+    }
+
+    try {
+      const response = await axios.get(`${API_BASE_URL}/admin-users/${id}`, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${req.cookies.token}`,
+        },
+      });
+
+      const adminUser = response.data.user;
+
+      res.render("admin-user", {
+        path: "/admin-users",
+        pagePath: "/admin-user",
+        user: req.user,
+        title: "admin_users",
+        adminUser,
+      });
+    } catch (error) {
+      console.error("❌ Failed to fetch admin user:", error.message);
+      res.render("admin-user", {
+        path: "/admin-users",
+        pagePath: "/admin-users",
+        user: req.user,
+        title: "admin_users",
+        adminUser: null,
+        error: "Could not load admin user",
       });
     }
   }

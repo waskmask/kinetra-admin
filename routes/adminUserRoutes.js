@@ -18,7 +18,7 @@ router.get(
 );
 
 // Update admin user (only admin/superadmin)
-router.put(
+router.patch(
   "/update/:id",
   verifyToken,
   isAdminOrSuperAdmin,

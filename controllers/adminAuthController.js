@@ -4,11 +4,11 @@ const generateToken = require("../utils/generateToken");
 const nodemailer = require("nodemailer");
 const fs = require("fs").promises;
 const path = require("path");
-
+const getCookieOptions = require("../utils/cookieOptions");
 // Register Admin
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, phone, role, isActive } = req.body;
+    const { name, email, password, phone, role, country, isActive } = req.body;
 
     const userExists = await AdminUser.findOne({ email });
     if (userExists)
@@ -22,9 +22,10 @@ exports.register = async (req, res) => {
       password: hashedPassword,
       phone,
       role,
+      country,
       isActive,
     });
-
+    const frontUrl = process.env.BASE_URL;
     // Prepare email
     try {
       // Load email template
@@ -38,13 +39,14 @@ exports.register = async (req, res) => {
       emailTemplate = emailTemplate
         .replace("{name}", name)
         .replace("{email}", email)
-        .replace("{role}", role);
+        .replace("{role}", role)
+        .replace("{frontUrl}", frontUrl);
 
       // Nodemailer transporter
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_SERVER,
         port: process.env.SMTP_PORT,
-        secure: process.env.SMTP_PORT === "465", // Use SSL for port 465, TLS for 587
+        secure: process.env.SMTP_PORT === "465",
         auth: {
           user: process.env.SMTP_USER,
           pass: process.env.PASS,
@@ -83,13 +85,7 @@ exports.login = async (req, res) => {
   const sanitizedUser = user.toObject();
   delete sanitizedUser.password;
 
-  // Set secure cookie
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-  });
+  res.cookie("token", token, getCookieOptions());
 
   res.status(200).json({
     success: true,

@@ -1,0 +1,403 @@
+<html lang="<%- __('lang') %>">
+  <head>
+    <link
+      href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css"
+      rel="stylesheet"
+    />
+    <%- include('partials/head', { title: __('admin_users') }) %>
+  </head>
+  <body class="dash-body min-vh-100">
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <!-- Main content -->
+    <main class="position-relative d-flex flex-column">
+      <!-- Navbar -->
+      <%- include('partials/navbar') %>
+      <section class="page-titel px-mp mt-3 w-100">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card border-0 w-100">
+              <div
+                class="card-body p-4 d-flex justify-content-between align-items-start"
+              >
+                <div class="p-title">
+                  <%-__('product_id') %>: <%-product.product_id%> <br />
+                  <small class="text-capitalize"
+                    ><%- __(product.main_base) %>, <%-product.category%></small
+                  >
+                </div>
+
+                <div>
+                  <span
+                    class="statusText <%- product.isActive ? 'active' : 'inactive'%>"
+                  >
+                    <%- product.isActive ? 'Active' : 'Inactive'%>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% if (user && (user.role === 'admin' || user.role === 'superadmin'))
+          { %>
+          <div class="col-md-6">
+            <div class="d-flex justify-content-end gap-3">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#updateProductModal"
+              >
+                <%-__('edit_product')%>
+              </button>
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#changePriceModal"
+              >
+                <%-__('change_price')%>
+              </button>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </section>
+
+      <section class="content px-25 pb-5 mt-3 mb-3">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="card border-0">
+                <div class="card-body p-4">
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="h5 mb-1">
+                        <%-product.product_name%> — <%-product.product_grade%>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="h6 text-end text-success">
+                        <%= (product.product_price)?.toLocaleString('de-DE', {
+                        minimumFractionDigits: 2, maximumFractionDigits: 5 }) %>
+                        € / <%-product.unit_type%>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <% if(product.origin !== ''){%>
+                    <div class="my-3 col-md-6">
+                      <label class="form-label mb-1"> <%-__('origin')%> </label>
+                      <div class="h6 text-capitalize"><%-product.origin%></div>
+                    </div>
+                    <% }%>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% if (user && (user.role === 'admin' || user.role ===
+            'superadmin')) { %>
+            <div class="col-lg-6">
+              <div class="card border-0">
+                <div class="card-body p-4">
+                  <div class="h6 mb-3"><%-__('price_change_log')%></div>
+                  <div id="priceChangeTable" class="mt-4"></div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <%- include('partials/footer') %>
+    </main>
+    <% if (user && (user.role === 'admin' || user.role === 'superadmin')) { %>
+       <!-- Update Product Modal -->
+       <div class="modal fade"
+       id="updateProductModal"
+       tabindex="-1"
+       aria-labelledby="updateProductModalLabel"
+       aria-hidden="true"
+       >
+       <div class="modal-dialog" role="document">
+         <div class="modal-content">
+           <div class="modal-header">
+             <h6 class="modal-title" id="updateProductModalLabel">
+               <%- __('edit_product') %>
+             </h6>
+             <button
+               type="button"
+               class="btn-close"
+               data-bs-dismiss="modal"
+               aria-label="Close"
+             ></button>
+           </div>
+           <div class="modal-body px-4">
+             <form id="updateProductForm">
+               <div class="mb-3">
+                 <label class="form-label"><%= __("product_category") %></label>
+                 <select id="category" class="text-capitalize">
+                   <option value="liquid" <%= product.category === "liquid" ? "selected" : "" %>><%- __('liquid') %></option>
+                   <option value="solid" <%= product.category === "solid" ? "selected" : "" %>><%- __('solid') %></option>
+                 </select>
+               </div>
+   
+               <div class="mb-3">
+                 <label for="product_name" class="form-label"><%- __('product_name') %></label>
+                 <input type="text" id="product_name" class="form-control" value="<%- product.product_name %>" />
+               </div>
+   
+               <div class="mb-3">
+                 <label for="product_grade" class="form-label"><%- __('product_grade') %></label>
+                 <input type="text" id="product_grade" class="form-control" value="<%- product.product_grade %>" />
+               </div>
+   
+               <div class="mb-3">
+                 <label class="form-label"><%= __("unit_type") %></label>
+                 <select id="unit_type" class="text-capitalize">
+                   <option value="M3" <%= product.unit_type === "M3" ? "selected" : "" %>><%- __('m3') %></option>
+                   <option value="Ltr" <%= product.unit_type === "Ltr" ? "selected" : "" %>><%- __('ltr') %></option>
+                   <option value="MT" <%= product.unit_type === "MT" ? "selected" : "" %>><%- __('mt') %></option>
+                   <option value="KG" <%= product.unit_type === "KG" ? "selected" : "" %>><%- __('kg') %></option>
+                   <option value="TONS" <%= product.unit_type === "TONS" ? "selected" : "" %>><%- __('tons') %></option>
+                 </select>
+               </div>
+   
+               <div class="mb-3">
+                 <label class="form-label "><%= __("origin") %></label>
+                 <select id="origin" class="text-capitalize">
+                   <% if (product.origin) { %>
+                     <option value="<%- product.origin %>" selected><%- product.origin %></option>
+                   <% } %>
+                   <%- include('partials/_countriesOptions') %>
+                 </select>
+               </div>
+   
+               <div class="mb-3">
+                 <label class="form-label mb-2"><%= __("status") %></label>
+                 <label class="check-container">
+                   <span class="statusText <%= product.isActive ? 'active' : 'inactive' %>">
+                     <%= product.isActive ? __('active') : __('inactive') %>
+                   </span>
+                   <input type="checkbox" id="isActiveCheckbox" <%= product.isActive ? 'checked' : '' %> />
+                   <span class="checkmark"></span>
+                 </label>
+               </div>
+   
+               <button
+                 id="updateProductButton"
+                 type="submit"
+                 class="btn btn-primary m-w-half mt-4 mb-2"
+               >
+                 <%= __("update") %>
+               </button>
+             </form>
+           </div>
+         </div>
+       </div>
+       </div>
+      
+       <!-- Update Product Price Modal -->
+       <div class="modal fade"
+           id="changePriceModal"
+           tabindex="-1"
+           aria-labelledby="changePriceModalLabel"
+           aria-hidden="true"
+       >
+       <div class="modal-dialog" role="document">
+         <div class="modal-content">
+           <div class="modal-header">
+             <h6 class="modal-title" id="changePriceModalLabel">
+               <%- __('change_price') %>
+             </h6>
+             <button
+               type="button"
+               class="btn-close"
+               data-bs-dismiss="modal"
+               aria-label="Close"
+             ></button>
+           </div>
+           <div class="modal-body px-4">
+             <form id="updatePriceForm">
+               <div class="mb-3">
+                 <label for="product_price" class="form-label"><%- __('product_price') %></label>
+                 <input
+                   type="text"
+                   id="new_price"
+                   class="form-control"
+                   placeholder="<%- __('product_price') %>"
+                 />
+               </div>
+           
+               <button
+                 id="updatePriceButton"
+                 type="submit"
+                 class="btn btn-primary m-w-half mt-4 mb-2"
+               >
+                 <%= __("update") %>
+               </button>
+             </form>
+           </div>
+         </div>
+       </div>
+       </div>
+    <script>
+      window.translations = {
+        invalid_price_format: "<%-__('invalid_price_format')%>",
+        registration_failed: "<%-__('registration_failed')%>",
+        product_name_required: "<%-__('product_name_required')%>",
+        product_grade_req: "<%-__('product_grade_req')%>",
+        select_unit_type: "<%-__('select_unit_type')%>",
+        product_price_req: "<%-__('product_price_req')%>",
+        product_added: "<%-__('product_added')%>",
+        no_changes: "<%-__('no_changes')%>",
+        loading: "<%-__('loading')%>",
+        save: "<%-__('save')%>",
+        updated: "<%-__('updated')%>",
+        product_updated: "<%-__('product_updated')%>",
+        price_updated: "<%-__('price_updated')%>",
+        update: "<%-__('update')%>",
+      };
+    </script>
+    <% } %>
+    <!-- javascript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js"
+      integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    <script src="/public/js/theme.js"></script>
+    <% if (user && (user.role === 'admin' || user.role === 'superadmin')) { %>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        new SlimSelect({
+          select: "#unit_type",
+          settings: {
+            placeholderText: "<%-__('unit_type')%>",
+            showSearch: false,
+          },
+        });
+        new SlimSelect({
+          select: "#category",
+          settings: {
+            placeholderText: "<%-__('select_category')%>",
+            showSearch: false,
+          },
+        });
+        new SlimSelect({
+          select: "#origin",
+          settings: {
+            placeholderText: "<%-__('origin')%>",
+            showSearch: false,
+          },
+        });
+      });
+    </script>
+
+    <script>
+      window.productId = "<%- product._id %>";
+      window.priceChanges = JSON.parse(
+        decodeURIComponent(
+          "<%- encodeURIComponent(JSON.stringify(product.price_change || [])) %>"
+        )
+      );
+    </script>
+
+    <script type="module" src="/public/apicalls/update-product.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if (
+          !Array.isArray(window.priceChanges) ||
+          window.priceChanges.length === 0
+        )
+          return;
+
+        new gridjs.Grid({
+          columns: [
+            {
+              name: "<%- __('change_from') %>",
+              formatter: (cell) =>
+                `${cell.toLocaleString("de-DE", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 5,
+                })} €`,
+            },
+            {
+              name: "<%- __('change_to') %>",
+              formatter: (cell) =>
+                `${cell.toLocaleString("de-DE", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 5,
+                })} €`,
+            },
+            {
+              name: "<%- __('difference') %>",
+              formatter: (cell) => {
+                const isPositive = cell >= 0;
+                return gridjs.html(`
+        <span style="color: ${isPositive ? "green" : "red"};">
+          ${isPositive ? "+" : ""}${cell.toFixed(3)} €
+        </span>
+      `);
+              },
+            },
+            {
+              name: "<%- __('changed_at') %>",
+              formatter: (cell) => {
+                const date = new Date(cell);
+                return date.toLocaleString("de-DE", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+              },
+            },
+          ],
+
+          data: window.priceChanges.map((change) => {
+            const from = parseFloat(change.change_from);
+            const to = parseFloat(change.change_to);
+            const diff = to - from;
+            return [from, to, diff, new Date(change.changed_at).toISOString()];
+          }),
+
+          pagination: {
+            limit: 5,
+            summary: true,
+          },
+          sort: true,
+          className: {
+            table: "table",
+            th: "th",
+            td: "td",
+          },
+          language: {
+            search: {
+              placeholder: "<%- __('search') %>",
+            },
+            pagination: {
+              previous: "<%- __('previous') %>",
+              next: "<%- __('next') %>",
+              showing: "<%- __('showing') %>",
+              results: () => "<%- __('results') %>",
+            },
+          },
+        }).render(document.getElementById("priceChangeTable"));
+      });
+    </script>
+    <% } %>
+  </body>
+</html>

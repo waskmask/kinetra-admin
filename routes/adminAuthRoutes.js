@@ -3,7 +3,11 @@ const passport = require("passport");
 const router = express.Router();
 const asyncHandler = require("../utils/asyncHandler");
 const adminAuthController = require("../controllers/adminAuthController");
-const { verifyToken, isSuperAdmin } = require("../middlewares/auth");
+const {
+  verifyToken,
+  isSuperAdmin,
+  isAdminOrSuperAdmin,
+} = require("../middlewares/auth");
 
 // Only SuperAdmin can register new admin users
 router.post(
@@ -32,6 +36,7 @@ router.post("/login", (req, res, next) => {
 router.post(
   "/change-password",
   verifyToken,
+  isAdminOrSuperAdmin,
   asyncHandler(adminAuthController.changePassword)
 );
 

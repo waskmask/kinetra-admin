@@ -1,4 +1,5 @@
 /* inter-200 - latin */
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
   font-family: "Inter";
@@ -67,7 +68,7 @@ body {
 }
 
 * {
-  font-family: "Inter" !important;
+  font-family: "Inter";
 }
 
 body {
@@ -103,8 +104,7 @@ html {
   display: inline-flex;
   align-items: flex-start;
   padding: 0.25rem 0.5rem 0.25rem 0;
-  font-weight: 600;
-  color: #203a33;
+  color: #697472;
   background-color: transparent;
   border: 0;
   width: 100%;
@@ -118,11 +118,12 @@ html {
 
 .btn-toggle,
 .btn-link {
-  font-weight: 600 !important;
+  font-weight: 400 !important;
+  font-size: 1rem !important;
 }
 
 .btn-link {
-  color: #203a33;
+  color: #697472;
   padding-left: 0;
   text-decoration: none;
 }
@@ -137,6 +138,7 @@ html {
   padding-left: 50px;
 }
 .btn-toggle-nav a {
+  font-family: "Outfit", sans-serif;
   color: #203a33;
 }
 .btn-toggle-nav a:hover {
@@ -176,7 +178,7 @@ html {
 }
 
 .main-sidebar {
-  border-right: 1.5px solid #cfd3d8;
+  background-color: #ffffff;
   max-height: 100dvh !important;
   /* Rotate arrow when open */
 }
@@ -310,15 +312,15 @@ nav .dropdown-menu .dropdown-item:focus {
   display: flex;
 }
 .dash-body .main-sidebar {
-  width: 280px;
+  width: 300px;
   position: fixed;
   left: 0;
   top: 0;
   min-height: 100dvh;
 }
 .dash-body main {
-  width: calc(100% - 280px);
-  margin-left: 280px;
+  width: calc(100% - 300px);
+  margin-left: 300px;
   position: relative;
 }
 
@@ -327,7 +329,8 @@ h2,
 h3,
 h4,
 h5,
-h6 .h1,
+h6,
+.h1,
 .h2,
 .h3,
 .h4,
@@ -335,11 +338,21 @@ h6 .h1,
 .h6 {
   color: #203a33;
   font-weight: 600;
+  font-family: "Outfit", sans-serif !important;
 }
 
 p,
 .p {
   color: #697472;
+}
+
+.p-45 {
+  padding: 2rem 2.5rem;
+}
+@media screen and (max-width: 576px) {
+  .p-45 {
+    padding: 1.2rem 1.5rem 1.5rem;
+  }
 }
 
 .fs-7 {
@@ -375,6 +388,7 @@ p,
   width: 100%;
   max-width: 400px;
   background-color: #ffffff;
+  padding: 2rem 2rem 2.5rem;
 }
 .auth .hasPassword {
   position: relative;
@@ -382,11 +396,23 @@ p,
 .auth .hasPassword .showPass {
   position: absolute;
   right: 0;
-  top: 30px;
+  top: 26px;
   padding: 0.5rem 0.85rem 0.5rem 0.5rem;
   font-size: 1.2rem;
   color: #697472;
   cursor: pointer;
+}
+.auth .h4 {
+  color: #697472;
+  font-size: 1rem;
+  font-weight: 500;
+}
+.auth .p {
+  font-size: 1.1rem;
+  color: #203a33;
+  text-align: center;
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
 }
 
 .hasPassword {
@@ -395,7 +421,7 @@ p,
 .hasPassword .showPass {
   position: absolute;
   right: 0;
-  top: 27px;
+  top: 28px;
   padding: 0.5rem 0.85rem 0.5rem 0.5rem;
   font-size: 1.2rem;
   color: #697472;
@@ -444,9 +470,10 @@ p,
 }
 
 .form-label {
-  font-size: 0.8rem;
-  color: #697472;
-  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+  color: #203a33;
+  margin-bottom: 0.35rem;
+  font-family: "Outfit", sans-serif;
 }
 
 .fieldset-label {
@@ -458,30 +485,61 @@ p,
 }
 
 .form-control,
-.form-select,
-.ss-main {
-  background-color: #eceeef !important;
-  border: none;
+.form-select {
+  background-color: #ffffff !important;
+  border: 1px solid #ced4da !important;
   color: #203a33;
   font-size: 0.875rem;
-  padding: 0.65rem 0.85rem;
+  padding: 0.5rem 0.85rem;
 }
-.form-control::-moz-placeholder, .form-select::-moz-placeholder, .ss-main::-moz-placeholder {
+.form-control::-moz-placeholder, .form-select::-moz-placeholder {
   color: #a19fc1;
 }
 .form-control::placeholder,
-.form-select::placeholder,
+.form-select::placeholder {
+  color: #a19fc1;
+}
+.form-control:focus,
+.form-select:focus {
+  outline: none;
+  box-shadow: none;
+}
+.form-control:-moz-read-only, .form-select:-moz-read-only {
+  background-color: #eceeef !important;
+  border: none !important;
+}
+.form-control:read-only,
+.form-select:read-only {
+  background-color: #eceeef !important;
+  border: none !important;
+}
+
+.ss-main {
+  background-color: #ffffff !important;
+  border: 1px solid #ced4da !important;
+  color: #203a33;
+  font-size: 0.875rem;
+  padding: 0.5rem 0.85rem;
+}
+.ss-main::-moz-placeholder {
+  color: #a19fc1;
+}
 .ss-main::placeholder {
   color: #a19fc1;
 }
+.ss-main:focus {
+  outline: none;
+  box-shadow: none;
+}
 
 .btn {
-  height: 41.7px;
+  height: 38.6px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 0.9rem;
   font-weight: 500;
+  font-family: "Outfit", sans-serif;
 }
 
 .btn.btn-primary {
@@ -494,6 +552,23 @@ p,
   border-color: #1f929c;
 }
 
+.btn-outline-primary {
+  background-color: transparent;
+  border-color: #1b7e87;
+  color: #203a33;
+}
+.btn-outline-primary:hover {
+  background-color: #1f929c;
+  border-color: #1f929c;
+}
+
+.btn-sm {
+  height: -moz-min-content;
+  height: min-content;
+  font-weight: 400;
+  padding: 0.25rem 0.75rem;
+}
+
 .px-mp {
   padding-left: 1.5em;
   padding-right: 1.5em;
@@ -504,19 +579,25 @@ p,
   padding-right: 0.8rem;
 }
 
+.alert {
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+}
+
 .p-title {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #697472;
+  font-family: "Outfit", sans-serif;
+  line-height: 1.4;
   line-height: normal;
-  margin-bottom: 1rem;
 }
 
 /* Customize the label (the check-container) */
 .check-container {
   display: block;
   position: relative;
-  padding-left: 30px;
+  padding-left: 22px;
   margin-bottom: 13px;
   cursor: pointer;
   font-size: 1rem;
@@ -526,6 +607,17 @@ p,
   color: #203a33;
   width: -moz-fit-content;
   width: fit-content;
+}
+.check-container .statusText {
+  font-size: 1rem;
+}
+.check-container .statusText.active {
+  background-color: transparent;
+  color: #1b7e87;
+}
+.check-container .statusText.inactive {
+  background-color: transparent;
+  color: #ff5757;
 }
 
 .check-container.light {
@@ -606,4 +698,169 @@ p,
   transition: all 0.2s;
   background-color: #18ca7a;
   border-color: #18ca7a;
+}
+
+.option {
+  text-transform: capitalize;
+}
+
+.ss-option {
+  font-family: "Outfit", sans-serif;
+}
+
+.ss-values {
+  text-transform: capitalize !important;
+}
+
+.ss-single {
+  font-family: "Outfit", sans-serif;
+}
+
+.gridjs-wrapper {
+  border-color: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.gridjs-container {
+  overflow-x: unset !important;
+}
+
+.gridjs-wrapper {
+  overflow-x: unset !important;
+}
+
+.gridjs-table {
+  table-layout: auto !important;
+  width: 100% !important;
+}
+
+.gridjs-footer {
+  box-shadow: none !important;
+}
+
+.text-cap {
+  text-transform: capitalize !important;
+}
+
+.td,
+.th {
+  font-size: 0.9rem !important;
+  color: #203a33 !important;
+  border: none !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+.td:first-child,
+.th:first-child {
+  text-transform: capitalize;
+}
+
+.gridjs-tr {
+  vertical-align: middle;
+}
+
+.gridjs thead th {
+  color: #697472 !important;
+  font-weight: 500;
+}
+
+.gridjs-th-content {
+  font-family: "Outfit", sans-serif !important;
+}
+
+.gridjs thead th:hover {
+  background-color: transparent !important;
+}
+
+.td.gridjs-td {
+  padding: 1.2rem 0.5rem !important;
+}
+
+span.statusText {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.2rem;
+  font-size: 0.8rem;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+span.statusText.active {
+  background-color: rgba(57, 218, 138, 0.17);
+  color: #39da8a;
+}
+
+span.statusText.inactive {
+  background-color: rgba(255, 91, 92, 0.17);
+  color: #ff5b5c;
+}
+
+.role-label {
+  text-transform: capitalize;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #f9f9f9;
+  border-radius: 0.2rem;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.role-label-xl {
+  font-size: 0.9rem;
+  font-weight: 400;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.25rem;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.role-superadmin {
+  color: #d32f2f;
+  background-color: #ffebee;
+}
+
+.role-admin {
+  color: #1976d2;
+  background-color: #e3f2fd;
+}
+
+.role-moderator {
+  color: #388e3c;
+  background-color: #e8f5e9;
+}
+
+.role-sales {
+  color: #f57c00;
+  background-color: #fff3e0;
+}
+
+.role-storage {
+  color: #7b1fa2;
+  background-color: #f3e5f5;
+}
+
+.role-accounts {
+  color: #00796b;
+  background-color: #e0f2f1;
+}
+
+.form-title {
+  color: #203a33;
+  font-size: 1rem;
+  font-family: "Outfit", sans-serif;
+  font-weight: 500;
+}
+
+small {
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.card h6 {
+  color: #203a33;
+  font-size: 1.1rem;
+}
+
+.modal-header {
+  padding: 1.5rem;
 }
