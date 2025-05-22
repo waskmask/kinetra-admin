@@ -1,0 +1,223 @@
+<html lang="<%- __('lang') %>">
+  <head>
+    <link
+      href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css"
+      rel="stylesheet"
+    />
+    <%- include('partials/head', { title: __('company_profile') }) %>
+  </head>
+  <body class="dash-body min-vh-100">
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <!-- Main content -->
+    <main class="position-relative d-flex flex-column">
+      <!-- Navbar -->
+      <%- include('partials/navbar') %>
+      <section
+        class="d-flex gap-3 align-items-center justify-content-between page-titel px-mp mt-3 mb-4 w-100"
+      >
+        <div class="p-title" style="font-size: 1.5rem">
+          <%-__('companies')%>
+        </div>
+        <button class="btn btn-primary" onclick="toAddNewCompany()">
+          <i class="bi bi-plus-circle-dotted"></i>
+        </button>
+      </section>
+
+      <section class="content px-25 pb-5 mt-0 mb-3">
+        <div class="container-fluid">
+          <div class="row">
+            <% if (companies && companies.length > 0) { %> <%
+            companies.forEach(company => { %>
+            <div class="col-lg-6 mb-4">
+              <div class="card border-0">
+                <div class="card-body p-4">
+                  <div class="row">
+                    <div class="col">
+                      <div class="d-flex justify-content-between">
+                        <div>
+                          <% if (company.logo) { %>
+                          <img
+                            src="<%= company.logo %>"
+                            alt="Company Logo"
+                            class="c-profile-logo mb-3"
+                          />
+                          <% } %>
+                          <div class="h5 text-capitalize mb-1">
+                            <%= company.company_name %>
+                          </div>
+                          <label class="form-label mb-1 text-capitalize">
+                            <%= company.address?.street || "" %>, <br />
+                            <%= company.address?.city || "" %> <%=
+                            company.address?.postalCode || "" %> - <%=
+                            company.address?.country || "" %>
+                          </label>
+                        </div>
+                        <div class="d-flex gap-3">
+                          <span
+                            style="height: fit-content"
+                            class="statusText <%- company.isActive ? 'active' : 'inactive'%>"
+                          >
+                            <%- company.isActive ? __('active') : __('inactive')
+                            %>
+                          </span>
+                          <a href="/update-company-profile/<%-company._id%>">
+                            <button class="btn btn-primary mb-3 p-edit-btn">
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="my-3 col-md-6">
+                      <div class="h6 text-capitalize"><%- __('contact') %></div>
+                      <label class="form-label mb-1">
+                        <span><%- __('email') %>:</span><br />
+                        <%= company.email || "-" %>
+                      </label>
+                      <label class="form-label mb-1">
+                        <span><%- __('phone') %>:</span><br />
+                        <%= company.phone || "-" %>
+                      </label>
+                      <label class="form-label mb-1">
+                        <span><%- __('fax') %>:</span><br />
+                        <%= company.fax || "-" %>
+                      </label>
+
+                      <div class="h6 mt-3 text-capitalize">
+                        <%- __('bank_details') %>
+                      </div>
+                      <label class="form-label mb-1">
+                        <span><%- __('bank_name') %>:</span><br />
+                        <%= company.bank_details?.bank_name || "-" %>
+                      </label>
+                      <label class="form-label mb-1">
+                        <span>IBAN:</span><br />
+                        <%= company.bank_details?.iban || "-" %>
+                      </label>
+                      <label class="form-label mb-1">
+                        <span>BIC / SWIFT:</span><br />
+                        <%= company.bank_details?.bic_swift || "-" %>
+                      </label>
+                      <label class="form-label mb-1">
+                        <span><%- __('address') %>:</span><br />
+                        <%= company.bank_details?.bank_address || "-" %>
+                      </label>
+                    </div>
+
+                    <div class="my-3 col-md-6">
+                      <div class="h6 text-capitalize"><%- __('legal') %></div>
+                      <label class="form-label mb-1">
+                        <span><%- __('registry') %>:</span><br />
+                        <%= company.registry || "-" %>
+                      </label>
+                      <label class="form-label mb-1">
+                        <span><%- __('registry_no') %>:</span><br />
+                        <%= company.registry_no || "-" %>
+                      </label>
+                      <label class="form-label mb-1">
+                        <span><%- __('tax_id') %>:</span><br />
+                        <%= company.tax_id || "-" %>
+                      </label>
+                      <label class="form-label mb-1">
+                        <span><%- __('vat_id') %>:</span><br />
+                        <%= company.vat_id || "-" %>
+                      </label>
+                      <label class="form-label mb-1">
+                        <span><%- __('representative') %>:</span><br />
+                        <%= company.representative || "-" %>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% }) %> <% } else { %>
+            <div class="col-12">
+              <div class="alert alert-info text-center">
+                <%= __("no_company_profile_added_yet") %>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <%- include('partials/footer') %>
+    </main>
+    <% if (user && (user.role === 'admin' || user.role === 'superadmin')) { %>
+
+    <script>
+      window.translations = {
+        invalid_price_format: "<%-__('invalid_price_format')%>",
+        registration_failed: "<%-__('registration_failed')%>",
+        product_name_required: "<%-__('product_name_required')%>",
+        product_grade_req: "<%-__('product_grade_req')%>",
+        select_unit_type: "<%-__('select_unit_type')%>",
+        product_price_req: "<%-__('product_price_req')%>",
+        product_added: "<%-__('product_added')%>",
+        no_changes: "<%-__('no_changes')%>",
+        loading: "<%-__('loading')%>",
+        save: "<%-__('save')%>",
+        updated: "<%-__('updated')%>",
+        product_updated: "<%-__('product_updated')%>",
+        price_updated: "<%-__('price_updated')%>",
+        update: "<%-__('update')%>",
+      };
+    </script>
+    <% } %>
+    <!-- javascript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js"
+      integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    <script src="/public/js/theme.js"></script>
+    <% if (user && (user.role === 'admin' || user.role === 'superadmin')) { %>
+    <!-- <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        new SlimSelect({
+          select: "#unit_type",
+          settings: {
+            placeholderText: "<%-__('unit_type')%>",
+            showSearch: false,
+          },
+        });
+        new SlimSelect({
+          select: "#category",
+          settings: {
+            placeholderText: "<%-__('select_category')%>",
+            showSearch: false,
+          },
+        });
+        new SlimSelect({
+          select: "#origin",
+          settings: {
+            placeholderText: "<%-__('origin')%>",
+            showSearch: false,
+          },
+        });
+      });
+    </script>
+  -->
+
+    <script>
+      function toAddNewCompany() {
+        window.location.href = "/add-company-profile";
+      }
+    </script>
+    <% } %>
+  </body>
+</html>

@@ -1,5 +1,6 @@
 const Storage = require("../modals/Storage");
 const AdminUser = require("../modals/AdminUser");
+const Product = require("../modals/Product");
 
 // Create a new storage
 exports.createStorage = async (req, res) => {

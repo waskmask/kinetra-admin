@@ -11,12 +11,17 @@ const adminRoutes = require("./routes/adminAuthRoutes");
 const adminUserRoutes = require("./routes/adminUserRoutes");
 const productRoutes = require("./routes/productRoutes");
 const storageRoutes = require("./routes/storageRoutes");
+const companyRoutes = require("./routes/companyRoutes");
+const customerRoutes = require("./routes/customerRoutes");
+const inventoryRoutes = require("./routes/inventoryRoutes");
 
 // frontend routes
 const frontentAuthRoutes = require("./routes/frontend/authRoutes");
 const frontentdashboardRoutes = require("./routes/frontend/dashboardRoutes");
 const frontentProductsRoutes = require("./routes/frontend/productsRoutes");
 const frontentStorageRoutes = require("./routes/frontend/storageRoutes");
+const frontentCompanyRoutes = require("./routes/frontend/companyRoutes");
+const frontentCustomerRoutes = require("./routes/frontend/customerRoutes");
 
 // i18n
 const acceptedLanguages = i18n.getLocales();
@@ -76,29 +81,25 @@ app.get("/ping", (req, res) => {
   return res.json({ success: true, dbConnected: global.dbConnected || false });
 });
 
-// Block all routes if DB is offline
-app.use((req, res, next) => {
-  if (req.path === "/ping") return next(); // allow /ping even if offline
-  if (global.dbConnected === false) {
-    return res.status(503).json({
-      success: false,
-      message: "You are offline. Please try again later.",
-    });
-  }
-  next();
+app.get("/ping", (req, res) => {
+  res.json({ success: true });
 });
-
 //api routes
 app.use("/api/admin", adminRoutes);
 app.use("/api/admin-users", adminUserRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/storage", storageRoutes);
+app.use("/api/company", companyRoutes);
+app.use("/api/customers", customerRoutes);
+app.use("/api/inventory", inventoryRoutes);
 
 //frontend admin routes
 app.use(frontentAuthRoutes);
 app.use(frontentdashboardRoutes);
 app.use(frontentProductsRoutes);
 app.use(frontentStorageRoutes);
+app.use(frontentCompanyRoutes);
+app.use(frontentCustomerRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
@@ -140,14 +141,14 @@ const startServer = async () => {
   try {
     await connectDB();
     console.log("✅ MongoDB connected");
-  } catch (err) {
-    console.error("❌ MongoDB error:", err.message);
-    console.warn("⚠️ Starting server without DB connection (offline mode)");
-  }
 
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-  });
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ Failed to connect to MongoDB:", err.message);
+    process.exit(1); // Exit the process instead of running in offline mode
+  }
 };
 
 startServer();

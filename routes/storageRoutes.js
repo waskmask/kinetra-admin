@@ -28,4 +28,5 @@ router.get(
   isAdminOrSuperAdmin,
   asyncHandler(storageController.getStorageById)
 );
+
 module.exports = router;

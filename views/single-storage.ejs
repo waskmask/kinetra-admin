@@ -1,0 +1,263 @@
+<html lang="<%- __('lang') %>">
+  <head>
+    <link
+      href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css"
+      rel="stylesheet"
+    />
+    <%- include('partials/head') %>
+  </head>
+  <body class="dash-body min-vh-100">
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <!-- Main content -->
+    <main class="position-relative d-flex flex-column">
+      <!-- Navbar -->
+      <%- include('partials/navbar') %>
+      <section class="page-titel px-mp mt-3 w-100">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card border-0 w-100">
+              <div
+                class="card-body p-4 d-flex justify-content-between align-items-start"
+              >
+                <div class="p-title">
+                  <%-__('storage_id') %>: <%-storage.storage_id%>
+                  <br />
+                  <div
+                    class="text-capitalize"
+                    style="font-weight: 400; font-size: 0.8rem; line-height: 2"
+                  >
+                    <%-storage.address.street_address%>,
+                    <%-storage.address.postal_code%>, <%-storage.address.city%>,
+                    <%-storage.address.country%>
+                  </div>
+                </div>
+
+                <div>
+                  <span
+                    class="statusText <%- storage.isActive ? 'active' : 'inactive'%>"
+                  >
+                    <%- storage.isActive ? 'Active' : 'Inactive'%>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% if (user && (user.role === 'admin' || user.role === 'superadmin'))
+          { %>
+          <div class="col-md-6">
+            <div class="d-flex justify-content-end gap-3">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary"
+                onclick="updateStorage('<%-storage._id%>')"
+              >
+                <%-__('update_storage')%>
+              </button>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </section>
+
+      <section class="content px-25 pb-5 mt-3 mb-3">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="card border-0">
+                <div class="card-body p-4">
+                  <div class="row">
+                    <div class="col">
+                      <div class="h5 mb-1"><%-storage.name%></div>
+                      <% if (storage.users && storage.users.length > 0) { %> <%
+                      storage.users.forEach(function(user) { %>
+                      <div class="user-col mt-3">
+                        <a href="/admin-users/<%= user._id %>">
+                          <div class="name">
+                            <span><%= user.name %></span>
+                            <span class="role-label role-<%= user.role %>"
+                              ><%= user.role %></span
+                            >
+                          </div>
+                        </a>
+                        <div class="email"><%= user.email %></div>
+                      </div>
+                      <% }) %> <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% if (user && (user.role === 'admin' || user.role ===
+            'superadmin')) { %>
+            <div class="col mt-5">
+              <div class="card border-0">
+                <div class="card-body p-4">
+                  <div class="h6 mb-3"><%-__('inventory')%></div>
+                  <div id="inventoryTable" class="mt-4"></div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <%- include('partials/footer') %>
+    </main>
+    <% if (user && (user.role === 'admin' || user.role === 'superadmin')) { %>
+
+    <script>
+      window.translations = {
+        invalid_price_format: "<%-__('invalid_price_format')%>",
+        registration_failed: "<%-__('registration_failed')%>",
+        product_name_required: "<%-__('product_name_required')%>",
+        product_grade_req: "<%-__('product_grade_req')%>",
+        select_unit_type: "<%-__('select_unit_type')%>",
+        product_price_req: "<%-__('product_price_req')%>",
+        product_added: "<%-__('product_added')%>",
+        no_changes: "<%-__('no_changes')%>",
+        loading: "<%-__('loading')%>",
+        save: "<%-__('save')%>",
+        updated: "<%-__('updated')%>",
+        product_updated: "<%-__('product_updated')%>",
+        price_updated: "<%-__('price_updated')%>",
+        update: "<%-__('update')%>",
+      };
+    </script>
+    <% } %>
+    <!-- javascript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js"
+      integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    <script src="/public/js/theme.js"></script>
+    <script>
+      function updateStorage(id) {
+        window.location.href = `/update-storage/${id}`;
+      }
+    </script>
+    <script>
+      const inventoryData = JSON.parse(
+        decodeURIComponent(
+          "<%- encodeURIComponent(JSON.stringify(inventory.data || [])) %>"
+        )
+      );
+
+      const storageId = "<%= storage._id %>";
+
+      new gridjs.Grid({
+        columns: [
+          {
+            name: "<%-__('products')%>",
+            id: "product_name",
+            data: (row) => row[0],
+
+            attributes: (cell, row, col) => {
+              if (row) {
+                return { class: "gridjs-td td text-start" };
+              }
+              return {};
+            },
+          },
+          {
+            name: "<%-__('quantity')%>",
+            id: "quantity",
+            data: (row) => row[1],
+            formatter: (cell, row) =>
+              gridjs.html(
+                `${cell} <span class="unit">${row.cells[4].data}</span>`
+              ),
+          },
+          {
+            name: "<%-__('held')%>",
+            id: "held_quantity",
+            data: (row) => row[2],
+            formatter: (cell, row) => {
+              const unit = row.cells[4].data; // unit_type
+              return gridjs.html(
+                cell === 0
+                  ? `<span class="text-muted">--</span>`
+                  : `${cell} <span class="unit">${unit}</span>`
+              );
+            },
+          },
+          {
+            name: "<%-__('available')%>",
+            id: "available_quantity",
+            data: (row) => row[3],
+            formatter: (cell, row) =>
+              gridjs.html(
+                `${cell} <span class="unit">${row.cells[4].data}</span>`
+              ),
+          },
+          {
+            name: "<%-__('unit_type')%>",
+            id: "unit_type",
+            data: (row) => row[4],
+            hidden: true, // Hide unit_type column but keep it for formatters
+          },
+          {
+            name: "<%-__('logs')%>",
+            id: "product_id",
+            data: (row) => row[5],
+            formatter: (cell) => {
+              if (!cell) {
+                console.warn("Missing product_id for row:", cell);
+                return gridjs.html(`<span class="text-muted">N/A</span>`);
+              }
+              return gridjs.html(
+                `<div class="mx-3 d-flex justify-content-end actn-btn"><a href="/inventory/logs/${storageId}/${cell}"><button class="btn btn-sm btn-ico btn-info"><i class="bi bi-arrow-up-right"></i></button></a></div>`
+              );
+            },
+          },
+        ],
+        data: inventoryData.map((item, index) => {
+          console.log(`Row ${index} data:`, {
+            product_name: item.product_name,
+            quantity: item.quantity,
+            held_quantity: item.held_quantity,
+            available_quantity: item.available_quantity,
+            unit_type: item.unit_type,
+            product_id: item.product_id,
+          }); // Debug full row data
+          return [
+            item.product_name, // Index 0
+            item.quantity, // Index 1
+            item.held_quantity, // Index 2
+            item.available_quantity, // Index 3
+            item.unit_type, // Index 4
+            item.product_id, // Index 5
+          ];
+        }),
+        pagination: { limit: 10 },
+        search: true,
+        sort: true,
+        className: {
+          table: "table",
+          th: "th",
+          td: "td",
+        },
+        language: {
+          search: { placeholder: "<%-__('search')%>" },
+          pagination: {
+            previous: "<%-__('previous')%>",
+            next: "<%-__('next')%>",
+            showing: "<%-__('showing')%>",
+            results: () => "records",
+          },
+        },
+      }).render(document.getElementById("inventoryTable"));
+    </script>
+  </body>
+</html>

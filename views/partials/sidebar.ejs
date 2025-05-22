@@ -44,10 +44,12 @@
       >
         <i class="bi bi-clipboard-data me-3"></i><%-__('inventory')%>   
       </button>
-      <div class="collapse " id="inventory-collapse" bis_skin_checked="1">
+      <div class="collapse <%= path === '/inventory' ? 'show' : '' %>" id="inventory-collapse" bis_skin_checked="1">
         <ul class="btn-toggle-nav fw-normal pb-1 small">
-          <li><a href="#" class="rounded"><%-__('update_inventory')%></a></li>
-          <li><a href="#" class="rounded"><%-__('view_inventory')%></a></li> 
+          <% if (user && (user.role === 'admin' || user.role === 'superadmin')) { %>
+          <li><a href="/add-inventory" class="rounded <%= pagePath === '/add-inventory' ? 'active' : '' %>"><%-__('update_inventory')%></a></li>
+          <% } %>
+          <li><a href="#" class="rounded <%= pagePath === '/inventoryOverview' ? 'active' : '' %>"><%-__('view_inventory')%></a></li> 
         </ul>
       </div>
     </li>
@@ -61,10 +63,18 @@
       >
         <i class="bi bi-person-badge me-3"></i> <%-__('customers')%> 
       </button>
-      <div class="collapse " id="customer-collapse" bis_skin_checked="1">
+      <div class="collapse <%= path === '/customers' ? 'show' : '' %>" id="customer-collapse" bis_skin_checked="1">
         <ul class="btn-toggle-nav fw-normal pb-1 small">
-          <li><a href="#" class="rounded"><%-__('add_new_customer')%></a></li> 
-          <li><a href="#" class="rounded"><%-__('view_customers')%></a></li> 
+          <% if (user && (user.role === 'admin' || user.role === 'superadmin')) { %>
+            <li>
+              <a 
+                href="<%= pagePath === '/add-customer' ? 'javascript:void(0)' : '/add-new-customer' %>"
+                class="rounded <%= pagePath === '/add-customer' ? 'active' : '' %>">
+                <%-__('add_new_customer')%></a>
+            </li> 
+          <% } %>
+          <li><a href="<%= pagePath === '/customers' ? 'javascript:void(0)' : '/customers' %>" 
+            class="rounded <%= pagePath === '/customers' ? 'active' : '' %>"><%-__('view_customers')%></a></li> 
         </ul>
       </div>
     </li>
@@ -116,7 +126,7 @@
       </button>
       <div class="collapse <%= path === '/storage' ? 'show' : '' %>" id="delivery-collapse" bis_skin_checked="1">
         <ul class="btn-toggle-nav fw-normal pb-1 small">
-          <li><a href="#" class="rounded <%= path === '/storage' ? 'active' : '' %>"><%-__('storage')%></a></li> 
+          <li><a href="/storages" class="rounded <%= path === '/storage' ? 'active' : '' %>"><%-__('storage')%></a></li> 
           <li><a href="#" class="rounded"><%-__('waybills')%></a></li> 
           <li><a href="#" class="rounded"><%-__('storage_members')%></a></li> 
         </ul>

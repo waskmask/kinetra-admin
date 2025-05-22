@@ -1,0 +1,84 @@
+<html lang="<%- __('lang') %>">
+  <head>
+    <link
+      href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css"
+      rel="stylesheet"
+    />
+    <%- include('partials/head', { title: __('all_products') }) %>
+  </head>
+  <body class="dash-body min-vh-100">
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <!-- Main content -->
+    <main class="position-relative">
+      <!-- Navbar -->
+      <%- include('partials/navbar') %> <% if (user && (user.role === 'admin' ||
+      user.role === 'superadmin')) { %>
+      <section class="page-titel px-mp mt-3 w-100">
+        <button class="btn btn-primary" onclick="toAddStorage()">
+          <%-__('add_new_storage')%>
+        </button>
+      </section>
+      <% } %>
+      <section class="content px-25 mt-4 pb-5">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col">
+              <div class="card border-0">
+                <div class="card-body p-4">
+                  <h6><%-__('storages')%></h6>
+
+                  <div id="storageTable"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <%- include('partials/footer') %>
+    </main>
+
+    <script>
+      window.storages = JSON.parse(
+        decodeURIComponent(
+          "<%- encodeURIComponent(JSON.stringify(storages || [])) %>"
+        )
+      );
+      window.translations = {
+        search: "<%-__('search')%>",
+        next: "<%-__('next')%>",
+        previous: "<%-__('previous')%>",
+        showing: "<%-__('showing')%>",
+        results: "<%-__('results')%>",
+      };
+    </script>
+    <!-- javascript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js"
+      integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/public/js/theme.js"></script>
+
+    <script>
+      function toAddStorage() {
+        window.location.href = "/add-storage";
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+        lucide.createIcons();
+      });
+    </script>
+
+    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    <script type="module" src="/public/apicalls/storageGrid.js"></script>
+  </body>
+</html>

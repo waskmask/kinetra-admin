@@ -474,6 +474,10 @@ p,
   color: #203a33;
   margin-bottom: 0.35rem;
   font-family: "Outfit", sans-serif;
+  display: block;
+}
+.form-label span {
+  color: #acacac;
 }
 
 .fieldset-label {
@@ -610,6 +614,8 @@ p,
 }
 .check-container .statusText {
   font-size: 1rem;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 .check-container .statusText.active {
   background-color: transparent;
@@ -782,6 +788,8 @@ span.statusText {
   font-size: 0.8rem;
   width: -moz-fit-content;
   width: fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 span.statusText.active {
@@ -863,4 +871,99 @@ small {
 
 .modal-header {
   padding: 1.5rem;
+}
+
+.user-col {
+  border: solid 1px #d8d8d8;
+  background-color: #f9f9f9;
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.25rem;
+  max-width: 350px;
+}
+.user-col .name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #203a33;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0;
+  text-transform: capitalize;
+}
+.user-col .email {
+  font-size: 0.875rem;
+  font-weight: 300;
+}
+
+.custom-img-input {
+  width: 180px;
+  height: 80px;
+  background-color: #f9f9f9;
+  border: 3px dashed #1b7e87;
+  border-radius: 0.25rem;
+  color: #203a33;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.custom-img-input i {
+  font-size: 2rem;
+  color: #1b7e87;
+  margin-top: -3px;
+}
+
+.form-image {
+  position: relative;
+  width: 250px;
+}
+.form-image img {
+  border-radius: 0.25rem;
+  -o-object-fit: contain;
+     object-fit: contain;
+  width: 100%;
+  height: auto;
+}
+.form-image .btn-removeImg {
+  position: absolute;
+  z-index: 2;
+  right: 0.5rem;
+  top: 0.5rem;
+  border: none;
+  background-color: red;
+  color: #ffffff;
+}
+.form-image .btn-removeImg:hover {
+  background-color: #e60000;
+}
+
+form .btn {
+  min-width: 150px;
+}
+form .btn-removeImg {
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+}
+
+.c-profile-logo {
+  max-width: 150px;
+  height: auto;
+}
+
+.p-edit-btn {
+  width: 27px;
+  height: 27px;
+}
+.p-edit-btn .bi {
+  font-size: 0.875rem;
+}
+
+.actn-btn a {
+  text-decoration: none;
+}
+.actn-btn .btn-ico {
+  padding: 4px;
 }

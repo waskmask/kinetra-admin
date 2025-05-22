@@ -95,24 +95,20 @@ exports.allAdminUsers = (req, res, next) => {
   next();
 };
 
-exports.canManageMenuCategory = (req, res, next) => {
-  const adminRoles = ["superadmin", "admin", "moderator"];
-  const { restaurantId } = req.params;
+exports.canAccessSharedResource = (req, res, next) => {
+  const adminRoles = ["superadmin", "admin", "moderator", "sales"];
 
   // ✅ Admin users
-  if (adminRoles.includes(req.user.role)) {
+  if (adminRoles.includes(req.user?.role)) {
     return next();
   }
 
-  // ✅ Logged-in restaurant (must match the route ID)
-  if (
-    req.user.role === "restaurant" &&
-    req.user._id.toString() === restaurantId
-  ) {
+  // ✅ Logged-in customer
+  if (req.customer?.role === "customer") {
     return next();
   }
 
-  // Not allowed
+  // ❌ Not allowed
   return res.status(403).json({ message: "Access denied: Not authorized" });
 };
 
@@ -129,10 +125,19 @@ exports.loggedInAdmin = (req, res, next) => {
   next();
 };
 
-//loggedIn restaurant
-exports.isRestaurantSelf = (req, res, next) => {
-  if (req.user.role !== "restaurant") {
-    return res.status(403).json({ message: "Access denied" });
+// customer token
+exports.verifyCustomerToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "unauthorized" });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded.role !== "customer") {
+      return res.status(403).json({ message: "forbidden" });
+    }
+    req.customer = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "invalid_token" });
   }
-  next();
 };

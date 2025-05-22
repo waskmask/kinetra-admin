@@ -6,7 +6,7 @@ const inventoryLogSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now },
   action: {
     type: String,
-    enum: ["added", "held", "removed", "dispatched"],
+    enum: ["added", "held", "removed", "dispatched", "release"],
     required: true,
   },
   performed_by: {

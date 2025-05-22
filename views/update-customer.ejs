@@ -1,0 +1,235 @@
+<html lang="<%- __('lang') %>">
+  <head>
+    <%- include('partials/head', { title: __('add_new_customer') }) %>
+  </head>
+  <body class="dash-body min-vh-100">
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <!-- Main content -->
+    <main class="position-relative">
+      <!-- Navbar -->
+      <%- include('partials/navbar') %>
+      <section class="page-titel px-mp mt-3 w-100">
+        <div class="p-title mb-4">
+          <%-__('customer_id')%>:
+          <span class="text-primary"><%-customer.customer_id%></span> |
+          <%-__('customer')%>:
+          <span class="text-primary"><%-customer.company_name%></span>
+        </div>
+      </section>
+
+      <section class="content px-25 pb-5">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-10">
+              <div class="card border-0">
+                <div class="card-body p-45">
+                  <h6 class="mb-3"><%-__('customer_details')%></h6>
+
+                  <form id="updateCustomerProfile" data-id="<%-customer._id%>">
+                    <div class="col-md-6 mb-3">
+                      <label for="company_name" class="form-label">
+                        <%-__('company_name')%>
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="company_name"
+                        value="<%- customer.company_name || ''%>"
+                      />
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">
+                          <%-__('email')%>
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="email"
+                          value="<%- customer.email || ''%>"
+                        />
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="phone" class="form-label">
+                          <%-__('phone')%>
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="phone"
+                          value="<%- customer.phone || ''%>"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="form-title mb-2 mt-3">
+                      <%= __("customer_address") %>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label" for="street">
+                        <%= __("street") %>
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="street"
+                        value="<%= customer.address?.street || '' %>"
+                      />
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label" for="city"
+                          ><%= __("city") %></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="city"
+                          value="<%= customer.address?.city || '' %>"
+                        />
+                      </div>
+
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label" for="postalCode">
+                          <%= __("postal_code") %>
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="postalCode"
+                          value="<%= customer.address?.postalCode || '' %>"
+                        />
+                      </div>
+
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label"><%= __("country") %></label>
+                        <select id="country">
+                          <option
+                            class="text-capitalize"
+                            value="<%= customer.address?.country%>"
+                            disabled
+                            selected
+                            hidden
+                          >
+                            <%= customer.address?.country%>
+                          </option>
+                          <%- include('partials/_countriesOptions') %>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-title mb-2 mt-3">
+                      <%= __("customer_legal_info") %>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label" for="tax_idx"
+                          ><%= __("tax_idx") %></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="tax_idx"
+                          value="<%= customer.tax_id || ''%>"
+                        />
+                      </div>
+
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label" for="representative"
+                          ><%= __("representative") %></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="representative"
+                          value="<%= customer.representative || ''%>"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="mt-3">
+                      <label class="check-container">
+                        <span class="statusText"> <%= __('active') %> </span>
+                        <input type="checkbox" id="isActive" <%=
+                        customer.isActive ? 'checked' : '' %> />
+                        <span class="checkmark"></span>
+                      </label>
+                    </div>
+
+                    <button
+                      id="updateCustomerButton"
+                      class="btn btn-primary m-w-half mt-4 mb-2"
+                    >
+                      <%= __("save") %>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <%- include('partials/footer') %>
+    </main>
+
+    <script>
+      window.translations = {
+        customer_created_successfully:
+          "<%- __('customer_created_successfully') %>",
+        customer_updated: "<%- __('customer_updated') %>",
+        customer_not_found: "<%- __('customer_not_found') %>",
+        email_already_exists: "<%- __('email_already_exists') %>",
+        server_error: "<%- __('server_error') %>",
+
+        // Validation
+        company_name_required: "<%- __('company_name_required') %>",
+        email_required: "<%- __('email_required') %>",
+        phone_required: "<%- __('phone_required') %>",
+        street_required: "<%- __('street_required') %>",
+        city_required: "<%- __('city_required') %>",
+        postalCode_required: "<%- __('postal_code_required') %>",
+        country_required: "<%- __('country_required') %>",
+        field_required: "<%- __('field_required') %>",
+
+        // Button states
+        loading: "<%- __('loading') %>",
+        save: "<%- __('save') %>",
+        saved: "<%- __('saved') %>",
+      };
+    </script>
+
+    <!-- javascript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js"
+      integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/public/js/theme.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        new SlimSelect({
+          select: "#country",
+          settings: {
+            placeholderText: "<%-__('country')%>",
+            showSearch: true,
+          },
+        });
+      });
+    </script>
+    <script type="module" src="/public/apicalls/update-customers.js"></script>
+  </body>
+</html>

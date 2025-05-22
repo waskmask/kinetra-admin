@@ -2,12 +2,14 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    console.log("🔄 Connecting to MongoDB...");
 
-    console.log("✅ MongoDB connected");
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 10000, // optional but helps debug
+    });
+
     global.dbConnected = true;
 
-    // Handle MongoDB events to update dbConnected globally
     mongoose.connection.on("disconnected", () => {
       console.warn("⚠️ MongoDB disconnected");
       global.dbConnected = false;
@@ -29,17 +31,3 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
-
-// const mongoose = require("mongoose");
-
-// const connectDB = async () => {
-//   try {
-//     await mongoose.connect(process.env.MONGO_URI);
-//     console.log("MongoDB connected");
-//   } catch (error) {
-//     console.error("MongoDB error:", error.message);
-//     process.exit(1);
-//   }
-// };
-
-// module.exports = connectDB;

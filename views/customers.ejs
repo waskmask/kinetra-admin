@@ -1,0 +1,303 @@
+<html lang="<%- __('lang') %>">
+  <head>
+    <link
+      href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css"
+      rel="stylesheet"
+    />
+    <%- include('partials/head', { title: __('company_profile') }) %>
+  </head>
+  <body class="dash-body min-vh-100">
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <!-- Main content -->
+    <main class="position-relative d-flex flex-column">
+      <!-- Navbar -->
+      <%- include('partials/navbar') %>
+      <section
+        class="d-flex gap-3 align-items-center justify-content-between page-titel px-mp mt-3 mb-4 w-100"
+      >
+        <div class="p-title" style="font-size: 1.5rem">
+          <%-__('customers')%>
+        </div>
+        <button class="btn btn-primary" onclick="toAddNewCustomer()">
+          <i class="bi bi-plus-circle-dotted"></i>
+        </button>
+      </section>
+
+      <section class="content px-25 pb-5 mt-0 mb-3">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col">
+              <div class="card border-0">
+                <div class="card-body p-4">
+                  <% if (customers && customers.length > 0) { %>
+                  <div id="customersTable"></div>
+                  <% } else { %>
+
+                  <div class="alert alert-info text-center">
+                    <%= __("no_customers_added_yet") %>
+                  </div>
+
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div id="modalContainer"></div>
+      <!-- Footer -->
+      <%- include('partials/footer') %>
+    </main>
+    <% if (user && (user.role === 'admin' || user.role === 'superadmin')) { %>
+
+    <script>
+      window.translations = {
+        customer_id: "<%- __('customer_id') %>",
+        email: "<%- __('email') %>",
+        phone: "<%- __('phone') %>",
+        tax_id: "<%- __('tax_id') %>",
+        representative: "<%- __('representative') %>",
+        active: "<%- __('active') %>",
+        inactive: "<%- __('inactive') %>",
+        contact: "<%- __('contact') %>",
+        legal: "<%- __('legal') %>",
+      };
+    </script>
+    <% } %>
+    <!-- javascript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js"
+      integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    <script src="/public/js/theme.js"></script>
+    <% if (user && (user.role === 'admin' || user.role === 'superadmin')) { %>
+
+    <script>
+      function toAddNewCustomer() {
+        window.location.href = "/add-new-customer";
+      }
+    </script>
+    <% } %>
+    <script type="module">
+      import { Grid, html } from "https://unpkg.com/gridjs?module";
+
+      document.addEventListener("DOMContentLoaded", () => {
+        window.customers = JSON.parse(
+          decodeURIComponent(
+            "<%- encodeURIComponent(JSON.stringify(customers || [])) %>"
+          )
+        );
+        window.customerMap = {};
+        customers.forEach((c) => {
+          window.customerMap[c._id] = c;
+        });
+
+        if (!customers.length) return;
+
+        new Grid({
+          columns: [
+            {
+              name: "Customer ID",
+              formatter: (customer) => customer.customer_id || "-",
+            },
+            { name: "Company Name" },
+            {
+              name: "Address",
+              formatter: (cell, row) => {
+                const a = row.cells[0].data.address || {};
+                const addressText = `${a.city || ""}, ${a.country || ""}`;
+                return html(
+                  `<div class="max-width-45l text-capitalize">${addressText}</div>`
+                );
+              },
+            },
+
+            {
+              name: "Status",
+              formatter: (isActive) => {
+                const statusText = isActive
+                  ? "<%- __('active') %>"
+                  : "<%- __('inactive') %>";
+                const statusClass = isActive ? "active" : "inactive";
+                return html(
+                  `<span class="statusText ${statusClass}">${statusText}</span>`
+                );
+              },
+            },
+            {
+              name: "Actions",
+              formatter: (cell, row) => {
+                const customer = row.cells[0].data;
+                return html(`
+      <div class="d-flex gap-2">
+        <button
+          class="btn btn-sm btn-outline-secondary viewCustomerBtn"
+          data-id="${customer._id}"
+        >
+          <i class="bi bi-eye"></i>
+        </button>
+        <a href="/update-customer/${customer._id}" class="btn btn-sm btn-primary">
+          <i class="bi bi-pencil"></i>
+        </a>
+      </div>
+    `);
+              },
+            },
+          ],
+          data: customers.map((c) => [
+            c,
+            c.company_name || "-",
+            `${c.address?.street || ""}, ${c.address?.postalCode || ""} ${
+              c.address?.city || ""
+            }, ${c.address?.country || ""}`,
+            c.isActive,
+            "", // dummy for actions, handled in formatter
+          ]),
+          pagination: {
+            limit: 10,
+            summary: true,
+          },
+          search: {
+            enabled: true,
+          },
+          sort: true,
+          className: {
+            table: "table",
+            th: "th",
+            td: "td",
+          },
+          language: {
+            search: {
+              placeholder: window.translations.search,
+            },
+            pagination: {
+              previous: window.translations.previous,
+              next: window.translations.next,
+              showing: window.translations.showing,
+              results: () => window.translations.results,
+            },
+          },
+        }).render(document.getElementById("customersTable"));
+      });
+      document.addEventListener("click", function (e) {
+        const btn = e.target.closest(".viewCustomerBtn");
+        if (!btn) return;
+
+        const id = btn.dataset.id;
+        const customer = window.customerMap[id];
+        if (customer) openCustomerModal(customer);
+      });
+    </script>
+    <script>
+      function openCustomerModal(customerJSON) {
+        const customer =
+          typeof customerJSON === "string"
+            ? JSON.parse(decodeURIComponent(customerJSON))
+            : customerJSON;
+
+        const address = customer.address || {};
+        const modalHtml = `
+            <div class="modal fade" id="viewCustomerModal" tabindex="-1" aria-labelledby="viewCustomerModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h6 class="modal-title" id="viewCustomerModalLabel">
+                      ${window.translations.customer_id}: ${
+          customer.customer_id
+        }
+                    </h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body px-4">
+                    <div class="card border-0">
+                      <div class="card-body ">
+                        <div class="row">
+                          <div class="col">
+                            <div class="d-flex justify-content-between gap-3">
+                              <div>
+                                <div class="h5 text-capitalize mb-1">${
+                                  customer.company_name
+                                }</div>
+                                <label class="form-label mb-1 text-capitalize">
+                                  ${address.street || ""} ${
+          address.city || ""
+        }<br />
+                                   ${address.postalCode || ""} - ${
+          address.country || ""
+        }
+                                </label>
+                              </div>
+                              <div class="d-flex gap-3">
+                                <span class="statusText ${
+                                  customer.isActive ? "active" : "inactive"
+                                }">
+                                  ${
+                                    customer.isActive
+                                      ? window.translations.active
+                                      : window.translations.inactive
+                                  }
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="my-3 col-md-6">
+                            <div class="h6 text-capitalize">${
+                              window.translations.contact
+                            }</div>
+                            <label class="form-label mb-1">
+                              <span>${window.translations.email}:</span><br />
+                              ${customer.email || "-"}
+                            </label>
+                            <label class="form-label mb-1">
+                              <span>${window.translations.phone}:</span><br />
+                              ${customer.phone || "-"}
+                            </label>
+                          </div>
+                          <div class="my-3 col-md-6">
+                            <div class="h6 text-capitalize">${
+                              window.translations.legal
+                            }</div>
+                            <label class="form-label mb-1">
+                              <span>${window.translations.tax_id}:</span><br />
+                              ${customer.tax_id || "-"}
+                            </label>
+                            <label class="form-label mb-1">
+                              <span>${
+                                window.translations.representative
+                              }:</span><br />
+                              ${customer.representative || "-"}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+
+        const container = document.getElementById("modalContainer");
+        container.innerHTML = modalHtml;
+
+        const modal = new bootstrap.Modal(
+          document.getElementById("viewCustomerModal")
+        );
+        modal.show();
+      }
+    </script>
+  </body>
+</html>
