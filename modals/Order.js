@@ -9,6 +9,7 @@ const additionalServiceSchema = new mongoose.Schema({
   },
   quantity: { type: Number, required: true },
   total: { type: Number, required: true },
+  vat: { type: Number },
 });
 
 const deliveryAddressSchema = new mongoose.Schema({
@@ -130,6 +131,7 @@ const orderSchema = new mongoose.Schema(
     },
     quantity_dispatched: { type: Number, default: 0 },
     quantity_delivered: { type: Number, default: 0 },
+    delivery_note_img: { type: String },
     delivery_passcode: {
       type: String,
       required: function () {
@@ -147,7 +149,7 @@ const orderSchema = new mongoose.Schema(
     currency: {
       type: String,
       default: "EUR",
-      enum: ["EUR", "USD", "INR", "AED", "GBP", "SAR", "PKR"],
+      enum: ["EUR", "USD", "INR", "AED", "GBP", "SAR"],
     },
     vat_percentage: { type: Number },
     vat_amount: { type: Number },
