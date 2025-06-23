@@ -30,11 +30,68 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggleImage = document.getElementById("toggleLogoImage");
   let removeLogoFlag = false;
 
-  toggleImage?.addEventListener("click", () => {
+  //signature input
+  const signatureInput = document.getElementById("signature");
+  const signatureImgBefore = signatureInput
+    .closest(".mt-3.mb-4")
+    .querySelector(".form-img-before");
+  const signatureFormImageDiv = signatureInput
+    .closest(".mt-3.mb-4")
+    .querySelector(".form-image");
+  const signaturePreview = document.getElementById("signaturePreview");
+  const removeSignatureBtn = document.getElementById("removeSignatureBtn");
+  const toggleSignatureImage = document.getElementById("toggleSignatureImage");
+  let removeSignatureFlag = false;
+
+  toggleSignatureImage?.addEventListener("click", () => signatureInput.click());
+
+  toggleImage?.addEventListener("click", (e) => {
+    e.stopPropagation();
     imageInput.click();
   });
+
+  signatureInput.addEventListener("change", (e) => {
+    removeError(signatureInput);
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      showError(signatureInput, translations.image_validation);
+      signatureInput.value = "";
+      return;
+    }
+
+    const maxSize = 1 * 1024 * 1024;
+    if (file.size > maxSize) {
+      showError(signatureInput, translations.image_size_limit);
+      signatureInput.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      signaturePreview.src = event.target.result;
+      signatureFormImageDiv.classList.remove("d-none");
+      signatureImgBefore.classList.add("d-none");
+    };
+    document.getElementById("remove_signature").value = "false";
+    reader.readAsDataURL(file);
+    removeSignatureFlag = false;
+  });
+
+  removeSignatureBtn?.addEventListener("click", () => {
+    signatureInput.value = "";
+    signaturePreview.src = "";
+    signatureFormImageDiv.classList.add("d-none");
+    signatureImgBefore.classList.remove("d-none");
+    document.getElementById("remove_signature").value = "true";
+    removeSignatureFlag = true;
+  });
+
+  // signature logic end
   // 👇 Ensure image input opens when clicking camera icon
-  customImgInput?.addEventListener("click", () => imageInput.click());
+  // customImgInput?.addEventListener("click", () => imageInput.click());
 
   // 👇 Handle image preview
   imageInput.addEventListener("change", (e) => {
@@ -98,37 +155,6 @@ document.addEventListener("DOMContentLoaded", () => {
     input.addEventListener("change", () => removeError(input));
   });
 
-  // Preview new uploaded image
-  imageInput.addEventListener("change", (e) => {
-    removeError(imageInput);
-
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-    if (!allowedTypes.includes(file.type)) {
-      showError(imageInput, translations.image_validation);
-      imageInput.value = "";
-      return;
-    }
-
-    const maxSize = 1 * 1024 * 1024;
-    if (file.size > maxSize) {
-      showError(imageInput, translations.image_size_limit);
-      imageInput.value = "";
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      imagePreview.src = event.target.result;
-      formImageDiv.classList.remove("d-none");
-      formImgBefore.classList.add("d-none");
-      customImgInput.classList.add("d-none");
-    };
-    reader.readAsDataURL(file);
-  });
-
   // Submit form
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -184,11 +210,15 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("bank_address").value
     );
     formData.append("remove_logo", removeLogoFlag ? "true" : "false");
+    formData.append("remove_signature", removeSignatureFlag ? "true" : "false");
 
     if (imageInput.files[0]) {
-      formData.append("image", imageInput.files[0]);
+      formData.append("logo", imageInput.files[0]);
     }
 
+    if (signatureInput.files[0]) {
+      formData.append("signature", signatureInput.files[0]);
+    }
     submitBtn.innerText = translations.loading;
 
     try {

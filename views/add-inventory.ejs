@@ -1,0 +1,90 @@
+<html lang="<%- __('lang') %>">
+  <head>
+    <link
+      href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css"
+      rel="stylesheet"
+    />
+    <%- include('partials/head', { title: __('all_products') }) %>
+  </head>
+  <body class="dash-body min-vh-100">
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <!-- Main content -->
+    <main class="position-relative">
+      <!-- Navbar -->
+
+      <section class="page-titel px-mp mt-3 w-100">
+        <div class="p-title mb-4"><%-__('update_inventory')%></div>
+      </section>
+
+      <section class="content px-25 mt-4 pb-5">
+        <div class="container-fluid">
+          <h4 class="text-center mb-4"><%-__('select_storage')%></h4>
+          <div class="row">
+            <div class="col-lg-6 offset-lg-3">
+              <% storages.forEach(function(storage) { %>
+              <a
+                class="text-decoration-none"
+                href="/add-inventory/<%- storage._id %>"
+              >
+                <div class="card mb-4 hover-primary w-100">
+                  <div
+                    class="card-body p-4 d-flex justify-content-between align-items-start"
+                  >
+                    <div class="p-title">
+                      <%- storage.name %>
+                      <br />
+                      <div
+                        class="text-capitalize"
+                        style="
+                          font-weight: 400;
+                          font-size: 0.8rem;
+                          line-height: 2;
+                        "
+                      >
+                        <%- storage.address.street_address %>, <%-
+                        storage.address.postal_code %>, <%- storage.address.city
+                        %>, <%- storage.address.country %>
+                      </div>
+                    </div>
+
+                    <div>
+                      <span
+                        class="statusText <%- storage.isActive ? 'active' : 'inactive' %>"
+                      >
+                        <%- storage.isActive ? 'Active' : 'Inactive' %>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <% }); %>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Footer -->
+      <%- include('partials/footer') %>
+    </main>
+
+    <!-- javascript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js"
+      integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/public/js/theme.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        lucide.createIcons();
+      });
+    </script>
+  </body>
+</html>

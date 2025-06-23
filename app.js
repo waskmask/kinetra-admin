@@ -14,6 +14,7 @@ const storageRoutes = require("./routes/storageRoutes");
 const companyRoutes = require("./routes/companyRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 const inventoryRoutes = require("./routes/inventoryRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 // frontend routes
 const frontentAuthRoutes = require("./routes/frontend/authRoutes");
@@ -22,6 +23,8 @@ const frontentProductsRoutes = require("./routes/frontend/productsRoutes");
 const frontentStorageRoutes = require("./routes/frontend/storageRoutes");
 const frontentCompanyRoutes = require("./routes/frontend/companyRoutes");
 const frontentCustomerRoutes = require("./routes/frontend/customerRoutes");
+const frontentInventoryRoutes = require("./routes/frontend/inventoryRoutes");
+const frontentOrderRoutes = require("./routes/frontend/orderRoutes");
 
 // i18n
 const acceptedLanguages = i18n.getLocales();
@@ -92,6 +95,7 @@ app.use("/api/storage", storageRoutes);
 app.use("/api/company", companyRoutes);
 app.use("/api/customers", customerRoutes);
 app.use("/api/inventory", inventoryRoutes);
+app.use("/api/orders", orderRoutes);
 
 //frontend admin routes
 app.use(frontentAuthRoutes);
@@ -100,6 +104,8 @@ app.use(frontentProductsRoutes);
 app.use(frontentStorageRoutes);
 app.use(frontentCompanyRoutes);
 app.use(frontentCustomerRoutes);
+app.use(frontentInventoryRoutes);
+app.use(frontentOrderRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });

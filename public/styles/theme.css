@@ -967,3 +967,103 @@ form .btn-removeImg {
 .actn-btn .btn-ico {
   padding: 4px;
 }
+
+.unit {
+  font-size: 0.65rem;
+  vertical-align: super;
+  margin-left: 0.1rem;
+}
+
+span.unit-sm {
+  font-size: 0.65rem;
+  vertical-align: super;
+}
+
+.inventory {
+  font-size: 0.75rem;
+  color: #203a33;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.2rem;
+  text-transform: capitalize;
+  min-width: 100px;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+  background-color: #f9f9f9;
+  color: #203a33;
+}
+
+.inventory_added {
+  color: #059669; /* emerald-600 */
+  background-color: #d1fae5; /* emerald-100 */
+}
+
+.inventory_release {
+  color: #2592eb; /* blue-600 */
+  background-color: #dbeafe; /* blue-100 */
+}
+
+.inventory_held {
+  color: #d97706; /* amber-600 */
+  background-color: #fef3c7; /* amber-100 */
+}
+
+.inventory_removed {
+  color: #b91c1c; /* red-700 (deeper) */
+  background-color: #fee2e2; /* red-100 */
+}
+
+.inventory_dispatched {
+  color: #7c3aed; /* violet-600 */
+  background-color: #ede9fe; /* violet-100 */
+}
+
+.hover-primary {
+  border-color: transparent !important;
+}
+.hover-primary:hover {
+  border-color: #1b7e87 !important;
+}
+
+.p-subtitle {
+  font-size: 0.75rem;
+  color: #697472;
+  font-weight: 300;
+  margin-top: 0.1rem;
+}
+
+.offer-order .logo {
+  height: 50px;
+}
+
+.vendor .name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 0.35rem;
+}
+.vendor .data {
+  font-size: 0.875rem;
+  margin-top: 0.15rem;
+  color: #697472;
+}
+
+.custom-table th {
+  background-color: #203a33 !important;
+  color: #ffffff !important;
+  font-weight: 400;
+  font-size: 0.875rem;
+}
+.custom-table td {
+  font-size: 0.875rem;
+  color: #203a33 !important;
+}
+.custom-table .remove-btn {
+  background-color: transparent;
+  color: #ff5757;
+  border-color: #ff5757;
+  border-radius: 1rem;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,0 +1,278 @@
+<html lang="<%- __('lang') %>">
+  <head>
+    <link
+      href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css"
+      rel="stylesheet"
+    />
+    <%- include('partials/head') %>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body class="dash-body min-vh-100">
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <!-- Main content -->
+    <main class="position-relative d-flex flex-column">
+      <!-- Navbar -->
+      <%- include('partials/navbar') %>
+
+      <section class="content px-25 mt-3 mb-3">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="card border-0">
+                <div class="card-body p-4">
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="h5 mb-1">
+                        <a
+                          href="/product/<%-inventoryLog.product_id%>"
+                          class="text-decoration-none"
+                        >
+                          <%-inventoryLog.product_name%> —
+                          <%-inventoryLog.product_grade%>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="small text-end"><%-__('storage')%></div>
+                      <div class="h6 text-end">
+                        <a
+                          href="/storages/<%-inventoryLog.storage_id%>"
+                          class="text-decoration-none"
+                        >
+                          <%-inventoryLog.storage_name%>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-md-4">
+                      <div class="small"><%-__('in_stock')%></div>
+                      <div class="h6 text-warning">
+                        <%-inventoryLog.quantity%>
+                        <span class="unit"><%-inventoryLog.unit_type%></span>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="small"><%-__('held')%></div>
+                      <div class="h6 text-danger">
+                        <% if (inventoryLog.held_quantity > 0) { %> <%=
+                        inventoryLog.held_quantity %>
+                        <span class="unit"><%- inventoryLog.unit_type %></span>
+                        <% } else { %>
+                        <span class="text-muted">--</span>
+                        <% } %>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="small"><%-__('available_quantity')%></div>
+                      <div class="h6 text-success">
+                        <%-inventoryLog.available_quantity%>
+                        <span class="unit"><%-inventoryLog.unit_type%></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content px-25 pb-5 mt-3 mb-3">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col">
+              <div class="card border-0">
+                <div class="card-body p-4">
+                  <div class="h6 mb-3"><%-__('inventory_log')%></div>
+                  <div id="logTable" class="mt-4"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Footer -->
+      <%- include('partials/footer') %>
+    </main>
+
+    <!-- javascript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js"
+      integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    <script src="/public/js/theme.js"></script>
+    <script>
+      const translations = {
+        quantity: "<%- __('quantity') %>",
+        timestamp: "<%- __('timestamp') %>",
+        performed_by: "<%- __('performed_by') %>",
+        logs: "<%- __('logs') %>",
+        search_placeholder: "<%- __('search') %>",
+        pagination: {
+          previous: "<%- __('previous') %>",
+          next: "<%- __('next') %>",
+          showing: "<%- __('showing') %>",
+          results: "<%- __('results') %>",
+        },
+        actions: {
+          added: "<%- __('action.added') %>",
+          removed: "<%- __('action.removed') %>",
+          held: "<%- __('action.held') %>",
+          release: "<%- __('action.release') %>",
+          dispatched: "<%- __('action.dispatched') %>",
+        },
+        messages: {
+          confirm_title: "<%- __('swal.confirm_title') %>",
+          confirm_text: "<%- __('swal.confirm_text') %>",
+          confirm_yes: "<%- __('swal.confirm_yes') %>",
+          confirm_cancel: "<%- __('swal.confirm_cancel') %>",
+          toast_success: "<%- __('swal.toast_success') %>",
+          delete_failed: "<%- __('swal.delete_failed') %>",
+          error_server: "<%- __('swal.error_server') %>",
+
+          storage_not_found: "<%- __('api.storage_not_found') %>",
+          product_not_found_in_storage:
+            "<%- __('api.product_not_found_in_storage') %>",
+          this_inventory_log_cannot_be_deleted:
+            "<%- __('api.this_inventory_log_cannot_be_deleted') %>",
+          cannot_delete_this_inventory_stock_would_exceed:
+            "<%- __('api.cannot_delete_this_inventory_stock_would_exceed') %>",
+        },
+      };
+    </script>
+
+    <script>
+      const inventoryLog = JSON.parse(
+        decodeURIComponent(
+          "<%- encodeURIComponent(JSON.stringify(inventoryLog || [])) %>"
+        )
+      );
+      console.log(inventoryLog);
+
+      const logs = inventoryLog.logs || [];
+      const transformedLogs = logs.map((log, index) => [
+        index + 1, // 0: Row number
+        log.action, // 1: Log action
+        { qty: log.quantity, unit: inventoryLog.unit_type }, // 2: Quantity with unit
+        new Date(log.timestamp).toLocaleString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        }), // 3: Timestamp
+        { name: log.performed_by, p_id: log.p_id }, // 4: Performed by
+        log._id, // 5: inventoryId
+        inventoryLog._id, // 6: productId
+        inventoryLog.storage_id, // 7: storageId
+        log.quantity, // 8: raw quantity
+      ]);
+
+      new gridjs.Grid({
+        columns: [
+          "#", // 0
+          {
+            name: "<%- __('log_type') %>", // 1
+            formatter: (cell) =>
+              gridjs.html(
+                `<span class="inventory inventory_${cell}">${
+                  translations.actions[cell] || cell
+                }</span>`
+              ),
+          },
+          {
+            name: translations.quantity, // 2
+            formatter: (cell) => {
+              const { qty, unit } = cell;
+              const formattedQty = new Intl.NumberFormat("en-US").format(qty);
+              return gridjs.html(
+                `${formattedQty}<span class="unit-sm"> ${unit}</span>`
+              );
+            },
+          },
+          translations.timestamp, // 3
+          {
+            name: translations.performed_by, // 4
+            formatter: (cell) =>
+              gridjs.html(
+                `<a href="/admin-users/${cell.p_id}">${cell.name}</a>`
+              ),
+          },
+          {
+            name: "inventoryId", // 5
+            hidden: true,
+          },
+          {
+            name: "productId", // 6
+            hidden: true,
+          },
+          {
+            name: "storageId", // 7
+            hidden: true,
+          },
+          {
+            name: "rawQty", // 8
+            hidden: true,
+          },
+          {
+            name: "Action",
+            formatter: (_, row) => {
+              const logType = row.cells[1]?.data;
+              const inventoryId = row.cells[5]?.data;
+              const productId = row.cells[6]?.data;
+              const storageId = row.cells[7]?.data;
+              const quantity = row.cells[8]?.data;
+
+              if (logType !== "added") {
+                return gridjs.html(`<span class="text-muted">N/A</span>`);
+              }
+
+              return gridjs.html(`
+              <div class="  d-flex  actn-btn">
+            <button
+              class="btn btn-sm btn-ico btn-danger"
+              onclick="softDeleteInventory('${storageId}', '${productId}', '${inventoryId}', ${quantity})">
+              <i class="bi bi-trash"></i>
+            </button>
+            </div>
+          `);
+            },
+          },
+        ],
+
+        data: transformedLogs,
+        pagination: { limit: 10 },
+        search: true,
+        sort: true,
+        className: {
+          table: "table",
+          th: "th",
+          td: "td",
+        },
+        language: {
+          search: { placeholder: translations.search_placeholder },
+          pagination: {
+            previous: translations.pagination.previous,
+            next: translations.pagination.next,
+            showing: translations.pagination.showing,
+            results: () => translations.pagination.results,
+          },
+        },
+      }).render(document.getElementById("logTable"));
+    </script>
+
+    <script type="module" src="/public/apicalls/remove-inventory.js"></script>
+  </body>
+</html>

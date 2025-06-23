@@ -5,13 +5,17 @@ const companyController = require("../controllers/companyController");
 const { verifyToken, isSuperAdmin } = require("../middlewares/auth");
 
 const { uploadImage, processImage } = require("../middlewares/uploadImage"); // adjust path if different
+const {
+  uploadCompanyAssets,
+  processImageField,
+} = require("../middlewares/uploadImage");
 
 router.post(
   "/profile",
   verifyToken,
   isSuperAdmin,
-  uploadImage, // ⬅️ multer handles file upload
-  processImage("logo"), // ⬅️ sets req.logo = saved file path
+  uploadImage,
+  processImage("image"),
   asyncHandler(companyController.createCompany)
 );
 
@@ -34,8 +38,9 @@ router.patch(
   "/profile/:id",
   verifyToken,
   isSuperAdmin,
-  uploadImage,
-  processImage("logo"),
+  uploadCompanyAssets,
+  processImageField("logo"),
+  processImageField("signature"),
   asyncHandler(companyController.updateCompany)
 );
 

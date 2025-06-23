@@ -45,7 +45,7 @@ router.get("/products", protectDashboard, async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Failed to fetch cuisines:", error.message);
-    res.render("admin-users", {
+    res.render("products", {
       path: "/products",
       pagePath: "/all-products",
       title: "admin_users",
@@ -72,6 +72,7 @@ router.get("/product/:productId", protectDashboard, async (req, res) => {
     );
 
     const product = response.data.product;
+    console.log(product);
 
     if (!product) {
       return res.status(404).render("404", { title: "Product not found" });

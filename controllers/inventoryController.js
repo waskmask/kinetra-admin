@@ -16,14 +16,14 @@ exports.addInventoryToStorage = async (req, res) => {
     quantity <= 0 ||
     !allowedActions.includes(action)
   ) {
-    return res.status(400).json({ message: "Invalid input" });
+    return res.status(400).json({ message: "invalid_input" });
   }
 
   const storage = await Storage.findById(id);
-  if (!storage) return res.status(404).json({ message: "Storage not found" });
+  if (!storage) return res.status(404).json({ message: "storage_not_found" });
 
   const product = await Product.findById(product_id);
-  if (!product) return res.status(404).json({ message: "Product not found" });
+  if (!product) return res.status(404).json({ message: "product_not_found" });
 
   const productInStorage = storage.products.find((p) =>
     p.product_id.equals(product_id)
@@ -43,7 +43,7 @@ exports.addInventoryToStorage = async (req, res) => {
 
       case "held":
         if (productInStorage.quantity < quantity) {
-          return res.status(400).json({ message: "Not enough stock to hold" });
+          return res.status(400).json({ message: "not_enough_stock_to_hold" });
         }
         productInStorage.quantity -= quantity;
         productInStorage.held_quantity =
@@ -54,7 +54,7 @@ exports.addInventoryToStorage = async (req, res) => {
         if (productInStorage.quantity < quantity) {
           return res
             .status(400)
-            .json({ message: "Not enough stock to remove" });
+            .json({ message: "not_enough_stock_to_remove" });
         }
         productInStorage.quantity -= quantity;
         break;
@@ -63,7 +63,7 @@ exports.addInventoryToStorage = async (req, res) => {
         if ((productInStorage.held_quantity || 0) < quantity) {
           return res
             .status(400)
-            .json({ message: "Not enough held stock to dispatch" });
+            .json({ message: "not_enough_held_stock_to_dispatch" });
         }
         productInStorage.held_quantity -= quantity;
         break;
@@ -72,7 +72,7 @@ exports.addInventoryToStorage = async (req, res) => {
         if ((productInStorage.held_quantity || 0) < quantity) {
           return res
             .status(400)
-            .json({ message: "Not enough held stock to release" });
+            .json({ message: "not_enough_held_stock_to_release" });
         }
         productInStorage.held_quantity -= quantity;
         productInStorage.quantity += quantity;
@@ -102,23 +102,24 @@ exports.addInventoryToStorage = async (req, res) => {
     .json({ success: true, message: `Inventory ${action}`, storage });
 };
 
-// soft delete inventory  from a storage
+// soft delete inventory from a storage
 exports.softDeleteInventoryLog = async (req, res) => {
   const { storageId, productId, inventoryId } = req.params;
   const adminUserId = req.user._id;
 
   const storage = await Storage.findById(storageId);
-  if (!storage) return res.status(404).json({ message: "Storage not found" });
+  if (!storage) return res.status(404).json({ message: "storage_not_found" });
 
   const productEntry = storage.products.find((p) =>
     p.product_id.equals(productId)
   );
 
   if (!productEntry) {
-    return res.status(404).json({ message: "Product not found in storage" });
+    return res.status(404).json({ message: "product_not_found_in_storage" });
   }
 
   const logEntry = productEntry.inventory.id(inventoryId);
+
   if (
     !logEntry ||
     logEntry.deleted ||
@@ -126,18 +127,26 @@ exports.softDeleteInventoryLog = async (req, res) => {
   ) {
     return res
       .status(400)
-      .json({ message: "This inventory log cannot be deleted" });
+      .json({ message: "this_inventory_log_cannot_be_deleted" });
   }
 
-  // Soft delete
+  const { quantity: logQty } = logEntry;
+  const { quantity, held_quantity = 0 } = productEntry;
+
+  // 🔐 Prevent available quantity from dropping below held stock
+  if (quantity - logQty < held_quantity) {
+    return res.status(400).json({
+      message: "cannot_delete_this_inventory_stock_would_exceed",
+    });
+  }
+
+  // 🟢 Soft delete
   logEntry.deleted = true;
   logEntry.action = "removed";
   logEntry.timestamp = new Date();
   logEntry.performed_by = adminUserId;
 
-  // Subtract quantity from product total
-  productEntry.quantity -= logEntry.quantity;
-  if (productEntry.quantity < 0) productEntry.quantity = 0;
+  productEntry.quantity -= logQty;
 
   await storage.save();
 
@@ -147,7 +156,10 @@ exports.softDeleteInventoryLog = async (req, res) => {
 // get all inventory overview
 exports.getInventoryOverview = async (req, res) => {
   const storages = await Storage.find({})
-    .populate("products.product_id", "product_name unit_type")
+    .populate(
+      "products.product_id",
+      "product_name product_grade unit_type product_id"
+    )
     .select("name products");
 
   const result = [];
@@ -162,15 +174,16 @@ exports.getInventoryOverview = async (req, res) => {
       );
 
       result.push({
-        product_id: product_id._id,
+        _id: product_id._id,
+        product_id: product_id.product_id,
         product_name: product_id.product_name,
+        product_grade: product_id.product_grade,
         unit_type: product_id.unit_type,
         storage_id: storage._id,
         storage_name: storage.name,
         quantity,
         held_quantity: held_quantity || 0,
         available_quantity,
-        log: [...new Set(logActions.reverse())], // unique action list
       });
     });
   });
@@ -183,8 +196,11 @@ exports.getInventoryLogsByProductFromStorage = async (req, res) => {
   const { storageId, productId } = req.params;
 
   const storage = await Storage.findById(storageId)
-    .populate("products.product_id", "product_name unit_type")
-    .populate("products.inventory.performed_by", "name email role")
+    .populate(
+      "products.product_id",
+      "product_name unit_type product_grade product_id _id"
+    )
+    .populate("products.inventory.performed_by", "name email role _id")
     .select("name products");
 
   if (!storage) {
@@ -209,13 +225,16 @@ exports.getInventoryLogsByProductFromStorage = async (req, res) => {
     performed_by: log.performed_by?.name || "N/A",
     email: log.performed_by?.email || "N/A",
     role: log.performed_by?.role || "N/A",
+    p_id: log.performed_by?._id || "N/A",
   }));
 
   res.json({
     success: true,
-    product_id: productEntry.product_id._id,
+    product_id: productEntry.product_id.product_id,
     product_name: productEntry.product_id.product_name,
     unit_type: productEntry.product_id.unit_type,
+    product_grade: productEntry.product_id.product_grade,
+    _id: productEntry.product_id._id,
     storage_id: storage._id,
     storage_name: storage.name,
     quantity: productEntry.quantity || 0,

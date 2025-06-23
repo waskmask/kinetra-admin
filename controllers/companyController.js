@@ -63,7 +63,7 @@ exports.createCompany = async (req, res, next) => {
       tax_id,
       vat_id,
       representative,
-      logo: req.logo || null, // ✅ add processed logo path
+      logo: req.logo || req.image || null,
     });
 
     res.status(201).json({
@@ -115,6 +115,7 @@ exports.updateCompany = async (req, res, next) => {
       representative,
       isActive,
       remove_logo,
+      remove_signature,
     } = req.body;
 
     const normalizeText = (text) =>
@@ -170,12 +171,18 @@ exports.updateCompany = async (req, res, next) => {
       await deleteFileFromStorage(currentCompany.logo); // Your function
       updateFields.logo = null;
     }
+    if (remove_signature === "true" && currentCompany.signature) {
+      await deleteFileFromStorage(currentCompany.signature); // Your function
+      updateFields.signature = null;
+    }
 
     // ✅ Add new logo if uploaded
     if (req.logo) {
       updateFields.logo = req.logo;
     }
-
+    if (req.signature) {
+      updateFields.signature = req.signature;
+    }
     const updatedCompany = await Company.findByIdAndUpdate(
       companyId,
       updateFields,

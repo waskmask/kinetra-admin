@@ -1,0 +1,405 @@
+<html lang="<%- __('lang') %>">
+  <head>
+    <%- include('partials/head', { title: __('create_new_offer') }) %>
+  </head>
+  <body class="dash-body min-vh-100">
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <!-- Main content -->
+    <main class="position-relative">
+      <!-- Navbar -->
+      <%- include('partials/navbar') %>
+      <section class="page-titel px-mp mt-3 w-100">
+        <div class="p-title mb-4"><%-__('new_offer')%></div>
+      </section>
+
+      <section class="content px-25 pb-5 offer-order">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card border-0">
+                <div class="card-body p-4">
+                  <label class="form-label"><%= __("send_offer_from") %></label>
+                  <select id="company">
+                    <option value="" disabled selected hidden>
+                      <%- __('select_company') %>
+                    </option>
+                    <%- include('partials/_countriesOptions') %>
+                  </select>
+
+                  <div class="data mt-4">
+                    <div class="vendor" id="companyDetails">
+                      <div class="logo">
+                        <img
+                          src="/uploads/2025/06/c14ab9bc-4fb4-45a0-bef5-c9c3773015a3.webp"
+                          alt="company logo"
+                          class="logo"
+                        />
+                      </div>
+                      <div class="name">Eco energie</div>
+                      <div class="data">
+                        Martin-Boheimer-Str. 7 <br />
+                        63303, Dreiech - Germany
+                      </div>
+                      <div class="data">
+                        <span><%-__('email')%>:</span> wewe4hyd@gmail.com
+                      </div>
+                      <div class="data">
+                        <span><%-__('phone')%>:</span> +491787281422
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card border-0">
+                <div class="card-body p-4">
+                  <label class="form-label"><%- __("send_offer_to") %></label>
+                  <select id="customer">
+                    <option value="" disabled selected hidden>
+                      <%- __('select_customer') %>
+                    </option>
+                    <%- include('partials/_countriesOptions') %>
+                  </select>
+                  <div class="data mt-4">
+                    <div class="vendor" id="customerDetails">
+                      <div class="name">Nimex Petroleum</div>
+                      <div class="data">
+                        Martin-Boheimer-Str. 7 <br />
+                        63303, Dreiech - Germany
+                      </div>
+                      <div class="data">
+                        <span><%-__('email')%>:</span> wewe4hyd@gmail.com
+                      </div>
+                      <div class="data">
+                        <span><%-__('phone')%>:</span> +491787281422
+                      </div>
+                    </div>
+
+                    <div class="row mt-4">
+                      <div class="col-md-6">
+                        <div class="form-label"><%-__('offer_validity')%></div>
+                        <input
+                          type="date"
+                          class="form-control"
+                          id="offerValidity"
+                          placeholder="<%-__('offer_validity')%>"
+                        />
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-label"><%-__('currency')%></div>
+                        <select id="currency">
+                          <option selected value="€">EURO</option>
+                          <option value="$">USD</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col">
+              <div class="card border-0">
+                <div class="card-body p-4">
+                  <div class="mb-3 col-md-8">
+                    <label class="form-label"><%-__('order_title')%></label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="title"
+                      value="This offer is sent for the following product and services:"
+                    />
+                  </div>
+                  <div class="d-flex gap-3 my-3">
+                    <button class="btn btn-primary">
+                      <%-__('add_product')%>
+                    </button>
+                    <button class="btn btn-primary">
+                      <%-__('add_service')%>
+                    </button>
+                  </div>
+                  <div class="col">
+                    <table class="table custom-table align-middle">
+                      <thead>
+                        <tr>
+                          <th><%-__('description')%></th>
+                          <th><%-__('unit_type')%></th>
+                          <th><%-__('price')%></th>
+                          <th><%-__('quantity')%></th>
+                          <th><%-__('vat')%></th>
+                          <th><%-__('total')%></th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr>
+                          <td>Diesel B7 015780</td>
+                          <td>MT</td>
+                          <td style="max-width: 60px">
+                            <input
+                              type="text"
+                              class="form-control"
+                              value="1020"
+                            />
+                          </td>
+                          <td style="max-width: 60px">
+                            <input
+                              type="text"
+                              class="form-control"
+                              value="20"
+                            />
+                          </td>
+                          <td style="max-width: 60px">
+                            <input
+                              type="text"
+                              class="form-control"
+                              value="19"
+                            />
+                          </td>
+                          <td>
+                            <div
+                              class="d-flex align-items-center justify-content-end gap-2"
+                            >
+                              <div>
+                                20000,0012 <span class="symbol">€</span>
+                              </div>
+                              <button class="btn btn-sm remove-btn">
+                                <i class="bi bi-x"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <input
+                              type="text"
+                              class="form-control"
+                              value="Transportation"
+                            />
+                          </td>
+                          <td><%-__('service')%></td>
+                          <td style="max-width: 60px">
+                            <input
+                              type="text"
+                              class="form-control"
+                              value="2000"
+                            />
+                          </td>
+                          <td style="max-width: 60px">
+                            <input type="text" class="form-control" value="1" />
+                          </td>
+                          <td style="max-width: 60px">
+                            <input
+                              type="text"
+                              class="form-control"
+                              value="19"
+                            />
+                          </td>
+                          <td>
+                            <div
+                              class="d-flex align-items-center justify-content-end gap-2"
+                            >
+                              <div>2380,00 <span class="symbol">€</span></div>
+                              <button class="btn btn-sm remove-btn">
+                                <i class="bi bi-x"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="5" class="text-end">
+                            <strong><%-__('subtotal')%></strong>
+                          </td>
+                          <td class="text-end">
+                            <strong
+                              >22380,00 <span class="symbol">€</span></strong
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="5" class="text-end">
+                            <strong><%-__('vat')%></strong>
+                          </td>
+                          <td class="text-end">
+                            <strong
+                              >4252,20 <span class="symbol">€</span></strong
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="5" class="text-end">
+                            <strong><%-__('total')%></strong>
+                          </td>
+                          <td class="text-end">
+                            <strong
+                              >26632,20 <span class="symbol">€</span></strong
+                            >
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-md-6">
+              <div class="card border-0">
+                <div class="card-body p-4">
+                  <div class="form-title mb-2">
+                    <%= __("delivery_address") %>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="street">
+                      <%= __("street") %>
+                    </label>
+                    <input type="text" class="form-control" id="street" />
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-4 mb-3">
+                      <label class="form-label" for="city"
+                        ><%= __("city") %></label
+                      >
+                      <input type="text" class="form-control" id="city" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label class="form-label" for="postalCode">
+                        <%= __("postal_code") %>
+                      </label>
+                      <input type="text" class="form-control" id="postalCode" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                      <label class="form-label"><%= __("country") %></label>
+                      <select id="country">
+                        <option value="" disabled selected hidden>
+                          <%- __('country') %>
+                        </option>
+                        <%- include('partials/_countriesOptions') %>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card border-0">
+                <div class="card-body p-4">
+                  <label class="form-label"><%-__('terms')%></label>
+                  <textarea
+                    class="form-control"
+                    id="terms"
+                    rows="3"
+                    placeholder="<%-__('terms')%>"
+                  ></textarea>
+
+                  <div class="mt-4">
+                    <div class="d-flex flex-wrap justify-content-end">
+                      <button class="btn btn-outline-secondary">
+                        <%-__('create_offer')%>
+                      </button>
+                      <button class="btn btn-primary ms-2">
+                        <%-__('create_order')%>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <%- include('partials/footer') %>
+    </main>
+
+    <script>
+      window.translations = {
+        // API Messages
+        company_created_successfully:
+          "<%- __('company_created_successfully') %>",
+        email_already_exists: "<%- __('email_already_exists') %>",
+        company_already_exists_at_address:
+          "<%- __('company_already_exists_at_address') %>",
+        server_error: "<%- __('server_error') %>",
+
+        // Validation
+        company_name_required: "<%- __('company_name_required') %>",
+        email_required: "<%- __('email_required') %>",
+        phone_required: "<%- __('phone_required') %>",
+        street_required: "<%- __('street_required') %>",
+        city_required: "<%- __('city_required') %>",
+        postalCode_required: "<%- __('postal_code_required') %>",
+        country_required: "<%- __('country_required') %>",
+        tax_or_vat_required: "<%- __('tax_or_vat_required') %>",
+        bank_name_required: "<%- __('bank_name_required') %>",
+        iban_required: "<%- __('iban_required') %>",
+        bic_swift_required: "<%- __('bic_swift_required') %>",
+        field_required: "<%- __('field_required') %>",
+        image_validation: "<%- __('image_validation') %>",
+        image_size_limit: "<%- __('image_size_limit') %>",
+        loading: "<%- __('loading') %>",
+        save: "<%- __('save') %>",
+        saved: "<%- __('saved') %>",
+      };
+    </script>
+
+    <!-- javascript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js"
+      integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/public/js/theme.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        new SlimSelect({
+          select: "#company",
+          settings: {
+            placeholderText: "<%-__('company')%>",
+            showSearch: true,
+          },
+        });
+        new SlimSelect({
+          select: "#customer",
+          settings: {
+            placeholderText: "<%-__('customer')%>",
+            showSearch: true,
+          },
+        });
+        new SlimSelect({
+          select: "#currency",
+          settings: {
+            placeholderText: "<%-__('customer')%>",
+            showSearch: true,
+          },
+        });
+        new SlimSelect({
+          select: "#country",
+          settings: {
+            placeholderText: "<%-__('company')%>",
+            showSearch: true,
+          },
+        });
+      });
+    </script>
+    <script type="module" src="/public/apicalls/companyProfile.js"></script>
+  </body>
+</html>

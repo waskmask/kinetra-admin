@@ -25,6 +25,7 @@ const CompanySchema = new mongoose.Schema(
     vat_id: String,
     representative: String,
     logo: String,
+    signature: String,
   },
   {
     timestamps: true,

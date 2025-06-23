@@ -287,6 +287,53 @@
                       <input type="file" class="d-none" id="logo" />
                     </div>
 
+                    <div class="mt-3 mb-4">
+                      <div
+                        class="form-img-before <%= company.signature ? 'd-none' : '' %>"
+                      >
+                        <label class="form-label" for="signature"
+                          ><%= __('company_signature') %></label
+                        >
+                        <div
+                          class="dfacjc mt-2 custom-img-input"
+                          id="toggleSignatureImage"
+                        >
+                          <i class="bi-pen"></i>
+                        </div>
+                      </div>
+
+                      <div
+                        class="form-image <%= company.signature ? '' : 'd-none' %>"
+                      >
+                        <img
+                          class="w-full-img"
+                          src="<%= company.signature %>"
+                          alt="signature_image"
+                          id="signaturePreview"
+                        />
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-removeImg"
+                          id="removeSignatureBtn"
+                        >
+                          <i class="bi-trash"></i>
+                        </button>
+                      </div>
+
+                      <input
+                        type="file"
+                        class="d-none"
+                        id="signature"
+                        name="signature"
+                      />
+                      <input
+                        type="hidden"
+                        name="remove_signature"
+                        id="remove_signature"
+                        value="false"
+                      />
+                    </div>
+
                     <div class="mt-3">
                       <label class="check-container">
                         <span class="statusText"> <%= __('active') %> </span>
