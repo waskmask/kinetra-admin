@@ -158,7 +158,7 @@ exports.getInventoryOverview = async (req, res) => {
   const storages = await Storage.find({})
     .populate(
       "products.product_id",
-      "product_name product_grade unit_type product_id"
+      "product_name product_grade unit_type product_id product_price"
     )
     .select("name products");
 
@@ -179,6 +179,7 @@ exports.getInventoryOverview = async (req, res) => {
         product_name: product_id.product_name,
         product_grade: product_id.product_grade,
         unit_type: product_id.unit_type,
+        product_price: product_id.product_price,
         storage_id: storage._id,
         storage_name: storage.name,
         quantity,

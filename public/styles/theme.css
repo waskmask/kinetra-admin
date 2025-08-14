@@ -943,6 +943,9 @@ small {
 form .btn {
   min-width: 150px;
 }
+form .remove-btn {
+  min-width: 25px !important;
+}
 form .btn-removeImg {
   min-width: -moz-fit-content;
   min-width: fit-content;

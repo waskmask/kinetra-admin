@@ -5,11 +5,12 @@ const additionalServiceSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   unit_type: {
     type: String,
-    enum: ["M3", "Ltr", "MT", "KG", "TONS", "service"],
+    enum: ["m3", "ltr", "mt", "kg", "tons", "srv", "pcs"],
   },
   quantity: { type: Number, required: true },
   total: { type: Number, required: true },
   vat: { type: Number },
+  service_vat_total: { type: Number }, // actual VAT amount
 });
 
 const deliveryAddressSchema = new mongoose.Schema({
@@ -17,8 +18,8 @@ const deliveryAddressSchema = new mongoose.Schema({
   houseNo: String,
   postalcode: String,
   city: String,
-  phone: String,
   country: { type: String, default: "Germany" },
+  phone: String,
 });
 
 const orderSchema = new mongoose.Schema(
@@ -32,32 +33,11 @@ const orderSchema = new mongoose.Schema(
       ref: "Product",
       required: true,
     },
-    product_snapshot: {
-      name: String,
-      grade: String,
-      unit_type: String,
-    },
-    customer_snapshot: {
-      name: String,
-      email: String,
-      phone: String,
-      address: {
-        street: String,
-        houseNo: String,
-        postalcode: String,
-        city: String,
-        country: String,
-      },
-    },
-    product_snapshot: {
-      name: String,
-      grade: String,
-      unit_type: {
-        type: String,
-        enum: ["M3", "Ltr", "MT", "KG", "TONS"],
-      },
-    },
-
+    product_price: { type: Number, required: true },
+    product_vat: { type: Number, required: true }, // percentage
+    product_vat_total: { type: Number, required: true }, // actual VAT value
+    product_price_total: { type: Number, required: true },
+    quantity_ordered: { type: Number, required: true },
     customer_snapshot: {
       customer_id: String,
       company_name: String,
@@ -69,6 +49,14 @@ const orderSchema = new mongoose.Schema(
         postalCode: String,
         city: String,
         country: String,
+      },
+    },
+    product_snapshot: {
+      name: String,
+      grade: String,
+      unit_type: {
+        type: String,
+        enum: ["M3", "Ltr", "MT", "KG", "TONS"],
       },
     },
     customer_id: {
@@ -111,10 +99,6 @@ const orderSchema = new mongoose.Schema(
       ref: "Storage",
       required: true,
     },
-    quantity_ordered: { type: Number, required: true },
-
-    order_amount: { type: Number, required: true },
-    tax_amount: { type: Number },
     created_by: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "AdminUser",
@@ -148,16 +132,18 @@ const orderSchema = new mongoose.Schema(
     timestamp: { type: String },
     currency: {
       type: String,
-      default: "EUR",
-      enum: ["EUR", "USD", "INR", "AED", "GBP", "SAR"],
+      default: "€",
+      enum: ["€", "$", "₹", "AED", "£", "SAR", "₽"],
     },
-    vat_percentage: { type: Number },
+    sub_total: { type: Number, required: true },
     vat_amount: { type: Number },
+    total_amount: { type: Number, required: true },
     notes: { type: String },
     terms_and_conditions: { type: String },
     isConvertedToInvoice: { type: Boolean, default: false },
     title: { type: String, trim: true },
     offer_pdf_url: { type: String },
+    order_pdf_url: { type: String },
     lieferschein_pdf_url: { type: String },
   },
   { timestamps: true }

@@ -13,138 +13,200 @@
       <section class="page-titel px-mp mt-3 w-100">
         <div class="p-title mb-4"><%-__('new_offer')%></div>
       </section>
+      <form id="createOrderForm" action="javascript:void(0);">
+        <section class="content px-25 pb-5 offer-order">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card border-0">
+                  <div class="card-body p-4">
+                    <label class="form-label"
+                      ><%= __("send_offer_from") %></label
+                    >
+                    <select id="companySelect">
+                      <option value="" disabled selected hidden>
+                        <%= __('select_company') %>
+                      </option>
+                      <% companyList.forEach(company => { %>
+                      <option
+                        value="<%= company._id %>"
+                        data-name="<%= company.company_name %>"
+                        data-email="<%= company.email %>"
+                        data-phone="<%= company.phone %>"
+                        data-logo="<%= company.logo %>"
+                        data-street="<%= company.address?.street %>"
+                        data-city="<%= company.address?.city %>"
+                        data-postal="<%= company.address?.postalCode %>"
+                        data-country="<%= company.address?.country %>"
+                      >
+                        <%= company.company_name %> — <%= company.address?.city
+                        %>, <%= company.address?.country %>
+                      </option>
+                      <% }); %>
+                    </select>
 
-      <section class="content px-25 pb-5 offer-order">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="card border-0">
-                <div class="card-body p-4">
-                  <label class="form-label"><%= __("send_offer_from") %></label>
-                  <select id="company">
-                    <option value="" disabled selected hidden>
-                      <%- __('select_company') %>
-                    </option>
-                    <%- include('partials/_countriesOptions') %>
-                  </select>
+                    <!-- Company Details -->
+                    <div
+                      class="data mt-4"
+                      id="companyDetails"
+                      style="display: none"
+                    >
+                      <div class="vendor">
+                        <div class="logo">
+                          <img
+                            src=""
+                            alt="Company Logo"
+                            class="logo-img logo"
+                          />
+                        </div>
+                        <div class="name company-name"></div>
+                        <div class="data company-address"></div>
+                        <div class="data">
+                          <span>Email:</span>
+                          <span class="company-email"></span>
+                        </div>
+                        <div class="data">
+                          <span>Phone:</span>
+                          <span class="company-phone"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card border-0">
+                  <div class="card-body p-4">
+                    <label class="form-label"><%- __("send_offer_to") %></label>
+                    <select id="customerSelect">
+                      <option value="" disabled selected hidden>
+                        <%= __('select_customer') %>
+                      </option>
+                      <% customers.forEach(customer => { %>
+                      <option
+                        value="<%= customer._id %>"
+                        data-name="<%= customer.company_name %>"
+                        data-email="<%= customer.email %>"
+                        data-phone="<%= customer.phone %>"
+                        data-street="<%= customer.address?.street %>"
+                        data-city="<%= customer.address?.city %>"
+                        data-postal="<%= customer.address?.postalCode %>"
+                        data-country="<%= customer.address?.country %>"
+                      >
+                        <%= customer.company_name %> — <%=
+                        customer.address?.city %>, <%= customer.address?.country
+                        %>
+                      </option>
+                      <% }); %>
+                    </select>
+                    <div class="data mt-4">
+                      <!-- Customer Details -->
+                      <div
+                        class="data mt-4"
+                        id="customerDetails"
+                        style="display: none"
+                      >
+                        <div class="vendor">
+                          <div class="name customer-name"></div>
+                          <div class="data customer-address"></div>
+                          <div class="data">
+                            <span>Email:</span>
+                            <span class="customer-email"></span>
+                          </div>
+                          <div class="data">
+                            <span>Phone:</span>
+                            <span class="customer-phone"></span>
+                          </div>
+                        </div>
+                      </div>
 
-                  <div class="data mt-4">
-                    <div class="vendor" id="companyDetails">
-                      <div class="logo">
-                        <img
-                          src="/uploads/2025/06/c14ab9bc-4fb4-45a0-bef5-c9c3773015a3.webp"
-                          alt="company logo"
-                          class="logo"
-                        />
-                      </div>
-                      <div class="name">Eco energie</div>
-                      <div class="data">
-                        Martin-Boheimer-Str. 7 <br />
-                        63303, Dreiech - Germany
-                      </div>
-                      <div class="data">
-                        <span><%-__('email')%>:</span> wewe4hyd@gmail.com
-                      </div>
-                      <div class="data">
-                        <span><%-__('phone')%>:</span> +491787281422
+                      <div class="row mt-4">
+                        <div class="col-md-6">
+                          <div class="form-label">
+                            <%-__('offer_validity')%>
+                          </div>
+                          <input
+                            type="date"
+                            class="form-control"
+                            id="offer_validity"
+                            placeholder="<%-__('offer_validity')%>"
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-label"><%-__('currency')%></div>
+                          <select id="currency">
+                            <option selected value="€">EURO</option>
+                            <option value="$">USD</option>
+                          </select>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="card border-0">
-                <div class="card-body p-4">
-                  <label class="form-label"><%- __("send_offer_to") %></label>
-                  <select id="customer">
-                    <option value="" disabled selected hidden>
-                      <%- __('select_customer') %>
-                    </option>
-                    <%- include('partials/_countriesOptions') %>
-                  </select>
-                  <div class="data mt-4">
-                    <div class="vendor" id="customerDetails">
-                      <div class="name">Nimex Petroleum</div>
-                      <div class="data">
-                        Martin-Boheimer-Str. 7 <br />
-                        63303, Dreiech - Germany
-                      </div>
-                      <div class="data">
-                        <span><%-__('email')%>:</span> wewe4hyd@gmail.com
-                      </div>
-                      <div class="data">
-                        <span><%-__('phone')%>:</span> +491787281422
-                      </div>
+
+            <div class="row mt-4">
+              <div class="col">
+                <div class="card border-0">
+                  <div class="card-body p-4">
+                    <div class="mb-3 col-md-8">
+                      <label class="form-label"><%-__('order_title')%></label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="title"
+                        value="This offer is sent for the following product and services:"
+                      />
                     </div>
 
-                    <div class="row mt-4">
-                      <div class="col-md-6">
-                        <div class="form-label"><%-__('offer_validity')%></div>
-                        <input
-                          type="date"
-                          class="form-control"
-                          id="offerValidity"
-                          placeholder="<%-__('offer_validity')%>"
-                        />
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-label"><%-__('currency')%></div>
-                        <select id="currency">
-                          <option selected value="€">EURO</option>
-                          <option value="$">USD</option>
-                        </select>
-                      </div>
+                    <div class="d-flex gap-3 my-3">
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#addProductModal"
+                      >
+                        <%-__('add_product')%>
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="addAddtionalItem"
+                      >
+                        <%-__('add_service')%>
+                      </button>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+                    <div class="col">
+                      <table
+                        class="table custom-table align-middle"
+                        id="itemTable"
+                      >
+                        <thead>
+                          <tr>
+                            <th><%-__('description')%></th>
+                            <th><%-__('unit_type')%></th>
+                            <th><%-__('price')%></th>
+                            <th><%-__('quantity')%></th>
+                            <th><%-__('vat')%></th>
+                            <th><%-__('total')%></th>
+                          </tr>
+                        </thead>
 
-          <div class="row mt-4">
-            <div class="col">
-              <div class="card border-0">
-                <div class="card-body p-4">
-                  <div class="mb-3 col-md-8">
-                    <label class="form-label"><%-__('order_title')%></label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="title"
-                      value="This offer is sent for the following product and services:"
-                    />
-                  </div>
-                  <div class="d-flex gap-3 my-3">
-                    <button class="btn btn-primary">
-                      <%-__('add_product')%>
-                    </button>
-                    <button class="btn btn-primary">
-                      <%-__('add_service')%>
-                    </button>
-                  </div>
-                  <div class="col">
-                    <table class="table custom-table align-middle">
-                      <thead>
-                        <tr>
-                          <th><%-__('description')%></th>
-                          <th><%-__('unit_type')%></th>
-                          <th><%-__('price')%></th>
-                          <th><%-__('quantity')%></th>
-                          <th><%-__('vat')%></th>
-                          <th><%-__('total')%></th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        <tr>
-                          <td>Diesel B7 015780</td>
-                          <td>MT</td>
+                        <tbody>
+                          <!-- <tr>
+                          <td>
+                            Diesel B7 015780
+                            <input type="hidden" id="product_id" />
+                            <input type="hidden" id="storage_id" />
+                          </td>
+                          <td id="unit_type">MT</td>
                           <td style="max-width: 60px">
                             <input
                               type="text"
                               class="form-control"
                               value="1020"
+                              id="product_price"
                             />
                           </td>
                           <td style="max-width: 60px">
@@ -152,6 +214,7 @@
                               type="text"
                               class="form-control"
                               value="20"
+                              id="quantity_ordered"
                             />
                           </td>
                           <td style="max-width: 60px">
@@ -159,6 +222,7 @@
                               type="text"
                               class="form-control"
                               value="19"
+                              id="product_vat"
                             />
                           </td>
                           <td>
@@ -182,7 +246,12 @@
                               value="Transportation"
                             />
                           </td>
-                          <td><%-__('service')%></td>
+                          <td>
+                            <select name="" id="additional_services_unit_type">
+                              <option value="srv">Service</option>
+                              <option value="srv">Piece</option>
+                            </select>
+                          </td>
                           <td style="max-width: 60px">
                             <input
                               type="text"
@@ -210,168 +279,269 @@
                               </button>
                             </div>
                           </td>
-                        </tr>
-                        <tr>
-                          <td colspan="5" class="text-end">
-                            <strong><%-__('subtotal')%></strong>
-                          </td>
-                          <td class="text-end">
-                            <strong
-                              >22380,00 <span class="symbol">€</span></strong
-                            >
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colspan="5" class="text-end">
-                            <strong><%-__('vat')%></strong>
-                          </td>
-                          <td class="text-end">
-                            <strong
-                              >4252,20 <span class="symbol">€</span></strong
-                            >
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colspan="5" class="text-end">
-                            <strong><%-__('total')%></strong>
-                          </td>
-                          <td class="text-end">
-                            <strong
-                              >26632,20 <span class="symbol">€</span></strong
-                            >
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                        </tr> -->
+                        </tbody>
+                        <tfoot>
+                          <tr>
+                            <td colspan="5" class="text-end">
+                              <strong><%-__('subtotal')%></strong>
+                            </td>
+                            <td class="text-end">
+                              <strong id="subtotalValue">0.0000 €</strong>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="5" class="text-end">
+                              <strong><%-__('vat')%></strong>
+                            </td>
+                            <td class="text-end">
+                              <strong id="vatValue">0.0000 €</strong>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="5" class="text-end">
+                              <strong><%-__('total')%></strong>
+                            </td>
+                            <td class="text-end">
+                              <strong id="totalValue">0.0000 €</strong>
+                            </td>
+                          </tr>
+                        </tfoot>
+                        <input
+                          type="hidden"
+                          name="sub_total"
+                          id="subTotalInput"
+                        />
+                        <input
+                          type="hidden"
+                          name="vat_amount"
+                          id="vatAmountInput"
+                        />
+                        <input
+                          type="hidden"
+                          name="total_amount"
+                          id="totalAmountInput"
+                        />
+                        <input
+                          type="hidden"
+                          name="product_vat_total"
+                          id="productVatTotalInput"
+                        />
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <div class="card border-0">
+                  <div class="card-body p-4">
+                    <div class="form-title mb-2">
+                      <%= __("delivery_address") %>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-8 mb-3">
+                        <label class="form-label" for="street">
+                          <%= __("street") %>
+                        </label>
+                        <input type="text" class="form-control" id="street" />
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label" for="houseNo">
+                          <%= __("house_number") %>
+                        </label>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="houseNo"
+                          value="23"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label" for="city"
+                          ><%= __("city") %></label
+                        >
+                        <input type="text" class="form-control" id="city" />
+                      </div>
+
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label" for="postalCode">
+                          <%= __("postal_code") %>
+                        </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="postalCode"
+                        />
+                      </div>
+
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label"><%= __("country") %></label>
+                        <select id="country">
+                          <option value="" disabled selected hidden>
+                            <%- __('country') %>
+                          </option>
+                          <%- include('partials/_countriesOptions') %>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <div class="form-label"><%-__('delivery_date')%></div>
+                        <input
+                          type="date"
+                          class="form-control"
+                          id="prefer_delivery_date"
+                          placeholder="<%-__('delivery_date')%>"
+                        />
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <div class="form-label"><%-__('phone')%></div>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="phone"
+                          placeholder="<%-__('phone')%>"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card border-0">
+                  <div class="card-body p-4">
+                    <label class="form-label"><%-__('terms')%></label>
+                    <textarea
+                      class="form-control"
+                      id="terms"
+                      rows="3"
+                      placeholder="<%-__('terms')%>"
+                    ></textarea>
+
+                    <div class="mt-4">
+                      <div class="d-flex flex-wrap justify-content-end">
+                        <button
+                          class="btn btn-outline-secondary"
+                          id="createOfferBtn"
+                        >
+                          <%-__('create_offer')%>
+                        </button>
+                        <button
+                          class="btn btn-primary ms-2"
+                          id="createOrderBtn"
+                        >
+                          <%-__('create_order')%>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
-          <div class="row mt-4">
-            <div class="col-md-6">
-              <div class="card border-0">
-                <div class="card-body p-4">
-                  <div class="form-title mb-2">
-                    <%= __("delivery_address") %>
-                  </div>
-                  <div class="mb-3">
-                    <label class="form-label" for="street">
-                      <%= __("street") %>
-                    </label>
-                    <input type="text" class="form-control" id="street" />
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-4 mb-3">
-                      <label class="form-label" for="city"
-                        ><%= __("city") %></label
-                      >
-                      <input type="text" class="form-control" id="city" />
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                      <label class="form-label" for="postalCode">
-                        <%= __("postal_code") %>
-                      </label>
-                      <input type="text" class="form-control" id="postalCode" />
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                      <label class="form-label"><%= __("country") %></label>
-                      <select id="country">
-                        <option value="" disabled selected hidden>
-                          <%- __('country') %>
-                        </option>
-                        <%- include('partials/_countriesOptions') %>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <div class="form-label"><%-__('delivery_date')%></div>
-                      <input
-                        type="date"
-                        class="form-control"
-                        id="prefer_delivery_date"
-                        placeholder="<%-__('delivery_date')%>"
-                      />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <div class="form-label"><%-__('phone')%></div>
-                      <input
-                        type="number"
-                        class="form-control"
-                        id="phone"
-                        placeholder="<%-__('phone')%>"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="card border-0">
-                <div class="card-body p-4">
-                  <label class="form-label"><%-__('terms')%></label>
-                  <textarea
-                    class="form-control"
-                    id="terms"
-                    rows="3"
-                    placeholder="<%-__('terms')%>"
-                  ></textarea>
-
-                  <div class="mt-4">
-                    <div class="d-flex flex-wrap justify-content-end">
-                      <button class="btn btn-outline-secondary">
-                        <%-__('create_offer')%>
-                      </button>
-                      <button class="btn btn-primary ms-2">
-                        <%-__('create_order')%>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
+        </section>
+      </form>
       <!-- Footer -->
       <%- include('partials/footer') %>
     </main>
 
+    <div
+      class="modal fade"
+      id="addProductModal"
+      tabindex="-1"
+      aria-labelledby="addProductModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6 class="modal-title" id="addProductModalLabel">
+              <%- __('add_product') %>
+            </h6>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body px-4">
+            <div class="table-responsive">
+              <table
+                class="table custom-table align-middle table-hover table-borderless"
+              >
+                <tbody>
+                  <% inventoryList.forEach(inventory => { %>
+                  <tr>
+                    <td>
+                      <%-inventory.product_name%> (<%-inventory.product_grade%>)
+                    </td>
+                    <td><%-inventory.storage_name%></td>
+                    <td>
+                      <%-inventory.available_quantity%> <%-inventory.unit_type%>
+                    </td>
+                    <td>
+                      <div class="d-flex justify-content-end">
+                        <button
+                          class="btn btn-sm btn-primary"
+                          data-id="<%-inventory._id%>"
+                          data-name="<%-inventory.product_name%>"
+                          data-grade="<%-inventory.product_grade%>"
+                          data-unit="<%-inventory.unit_type%>"
+                          data-price="<%-inventory.product_price%>"
+                          data-available="<%-inventory.available_quantity%>"
+                          data-storage="<%-inventory.storage_id%>"
+                          data-bs-dismiss="modal"
+                          onclick="addProductToTable(this)"
+                        >
+                          <%-__('add')%>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
       window.translations = {
-        // API Messages
-        company_created_successfully:
-          "<%- __('company_created_successfully') %>",
-        email_already_exists: "<%- __('email_already_exists') %>",
-        company_already_exists_at_address:
-          "<%- __('company_already_exists_at_address') %>",
-        server_error: "<%- __('server_error') %>",
+        company_required: "Please select a company",
+        customer_required: "Please select a customer",
+        delivery_address_required: "Delivery address is required",
+        invalid_offer_date: "Offer validity must be today or future date",
+        invalid_delivery_date: "Delivery date must be today or future date",
+        at_least_one_item_required:
+          "Please add at least one product or service",
 
-        // Validation
-        company_name_required: "<%- __('company_name_required') %>",
-        email_required: "<%- __('email_required') %>",
-        phone_required: "<%- __('phone_required') %>",
-        street_required: "<%- __('street_required') %>",
-        city_required: "<%- __('city_required') %>",
-        postalCode_required: "<%- __('postal_code_required') %>",
-        country_required: "<%- __('country_required') %>",
-        tax_or_vat_required: "<%- __('tax_or_vat_required') %>",
-        bank_name_required: "<%- __('bank_name_required') %>",
-        iban_required: "<%- __('iban_required') %>",
-        bic_swift_required: "<%- __('bic_swift_required') %>",
-        field_required: "<%- __('field_required') %>",
-        image_validation: "<%- __('image_validation') %>",
-        image_size_limit: "<%- __('image_size_limit') %>",
-        loading: "<%- __('loading') %>",
-        save: "<%- __('save') %>",
-        saved: "<%- __('saved') %>",
+        loading: "Loading...",
+        offer_created_successfully: "Offer created successfully",
+        order_created_successfully: "Order created successfully",
+
+        // API messages
+        invalid_orderStatus: "Invalid order status",
+        invalid_quantity_ordered: "Invalid quantity for product",
+        product_not_found_or_inactive: "Product not found or inactive",
+        customer_not_found: "Customer not found",
+        company_not_found: "Company not found",
+        storage_not_found: "Storage not found",
+        product_price_total_mismatch:
+          "Total price doesn't match the expected value",
+        product_not_found_in_selected_storage:
+          "Product not found in selected storage",
+        insufficient_stock_to_hold_in_storage: "Not enough stock to hold",
+        server_error: "An unexpected server error occurred",
       };
     </script>
 
@@ -388,18 +558,19 @@
       crossorigin="anonymous"
     ></script>
     <script src="/public/js/theme.js"></script>
+    <script type="module" src="/public/apicalls/new-offer.js"></script>
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         new SlimSelect({
-          select: "#company",
+          select: "#companySelect",
           settings: {
             placeholderText: "<%-__('company')%>",
             showSearch: true,
           },
         });
         new SlimSelect({
-          select: "#customer",
+          select: "#customerSelect",
           settings: {
             placeholderText: "<%-__('customer')%>",
             showSearch: true,
@@ -421,6 +592,265 @@
         });
       });
     </script>
-    <script type="module" src="/public/apicalls/companyProfile.js"></script>
+
+    <script>
+      document
+        .getElementById("companySelect")
+        .addEventListener("change", function () {
+          const selected = this.selectedOptions[0];
+          if (!selected) return;
+
+          document.querySelector("#companyDetails").style.display = "block";
+          document.querySelector("#companyDetails .logo-img").src =
+            selected.dataset.logo;
+          document.querySelector("#companyDetails .company-name").textContent =
+            selected.dataset.name;
+          document.querySelector(
+            "#companyDetails .company-address"
+          ).innerHTML = `
+      ${selected.dataset.street}<br />
+      ${selected.dataset.postal}, ${selected.dataset.city} - ${selected.dataset.country}
+    `;
+          document.querySelector("#companyDetails .company-email").textContent =
+            selected.dataset.email;
+          document.querySelector("#companyDetails .company-phone").textContent =
+            selected.dataset.phone;
+        });
+
+      document
+        .getElementById("customerSelect")
+        .addEventListener("change", function () {
+          const selected = this.selectedOptions[0];
+          if (!selected) return;
+
+          document.querySelector("#customerDetails").style.display = "block";
+          document.querySelector(
+            "#customerDetails .customer-name"
+          ).textContent = selected.dataset.name;
+          document.querySelector(
+            "#customerDetails .customer-address"
+          ).innerHTML = `
+      ${selected.dataset.street}<br />
+      ${selected.dataset.postal}, ${selected.dataset.city} - ${selected.dataset.country}
+    `;
+          document.querySelector(
+            "#customerDetails .customer-email"
+          ).textContent = selected.dataset.email;
+          document.querySelector(
+            "#customerDetails .customer-phone"
+          ).textContent = selected.dataset.phone;
+        });
+    </script>
+    <script>
+      const itemTableBody = document.querySelector("#itemTable tbody");
+      const subtotalElem = document.getElementById("subtotalValue");
+      const vatElem = document.getElementById("vatValue");
+      const totalElem = document.getElementById("totalValue");
+      let selectedCurrency = document.getElementById("currency").value;
+      document.getElementById("currency").addEventListener("change", (e) => {
+        selectedCurrency = e.target.value;
+        calculateTotals(); // re-render totals with new symbol
+      });
+      const formatter = new Intl.NumberFormat("de-DE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 4,
+      });
+      function normalizeNumber(val) {
+        if (!val) return 0;
+        return parseFloat(val.toString().replace(",", "."));
+      }
+
+      function calculateTotals() {
+        let subtotal = 0;
+        let totalVat = 0;
+
+        const rows = itemTableBody.querySelectorAll("tr[data-type]");
+
+        rows.forEach((row) => {
+          const priceInput = row.querySelector("input[name='price']");
+          const qtyInput = row.querySelector("input[name='quantity']");
+          const vatInput = row.querySelector("input[name='vat']");
+
+          if (priceInput && qtyInput && vatInput) {
+            const price = normalizeNumber(priceInput.value);
+            const qty = normalizeNumber(qtyInput.value);
+            const vat = normalizeNumber(vatInput.value);
+
+            const rowTotal = price * qty;
+            const rowVat = rowTotal * (vat / 100);
+
+            subtotal += rowTotal;
+            totalVat += rowVat;
+
+            // Set VAT total in the corresponding hidden input
+            if (row.dataset.type === "service") {
+              const vatTotalInput = row.querySelector(
+                "input[name='service_vat_total']"
+              );
+              if (vatTotalInput) vatTotalInput.value = rowVat.toFixed(4);
+            }
+
+            const totalDisplay = row.querySelector(".symbol")?.parentElement;
+            if (totalDisplay) {
+              totalDisplay.innerHTML = `${formatter.format(
+                rowTotal + rowVat
+              )} <span class="symbol">${selectedCurrency}</span>`;
+            }
+          }
+        });
+
+        subtotalElem.innerHTML = `<strong>${formatter.format(
+          subtotal
+        )} <span class="symbol">${selectedCurrency}</span></strong>`;
+        vatElem.innerHTML = `<strong>${formatter.format(
+          totalVat
+        )} <span class="symbol">${selectedCurrency}</span></strong>`;
+        totalElem.innerHTML = `<strong>${formatter.format(
+          subtotal + totalVat
+        )} <span class="symbol">${selectedCurrency}</span></strong>`;
+
+        // Update hidden inputs
+        document.getElementById("subTotalInput").value = subtotal.toFixed(4);
+        document.getElementById("vatAmountInput").value = totalVat.toFixed(4);
+        document.getElementById("totalAmountInput").value = (
+          subtotal + totalVat
+        ).toFixed(4);
+
+        // Set product VAT total separately (only one product allowed)
+        const productRow = itemTableBody.querySelector(
+          "tr[data-type='product']"
+        );
+        if (productRow) {
+          const price = normalizeNumber(
+            productRow.querySelector("input[name='price']")?.value
+          );
+          const qty = normalizeNumber(
+            productRow.querySelector("input[name='quantity']")?.value
+          );
+          const vat = normalizeNumber(
+            productRow.querySelector("input[name='vat']")?.value
+          );
+          const vatAmount = price * qty * (vat / 100);
+
+          productRow.querySelector("input[name='product_vat_total']").value =
+            vatAmount.toFixed(4);
+          document.getElementById("productVatTotalInput").value =
+            vatAmount.toFixed(4);
+        }
+      }
+      function removeRow(button) {
+        const row = button.closest("tr");
+        if (row) {
+          row.remove();
+          calculateTotals();
+        }
+      }
+
+      function addProductToTable(button) {
+        const productId = button.getAttribute("data-id");
+        const productName = button.getAttribute("data-name");
+        const productGrade = button.getAttribute("data-grade");
+        const unitType = button.getAttribute("data-unit");
+        const productPrice = button.getAttribute("data-price") || "";
+        const storageId = button.getAttribute("data-storage");
+
+        // Remove existing product row if present
+        const existingRow = itemTableBody.querySelector(
+          "tr[data-type='product']"
+        );
+        if (existingRow) existingRow.remove();
+
+        const productRow = document.createElement("tr");
+        productRow.setAttribute("data-type", "product");
+        productRow.innerHTML = `
+      <td>
+        ${productName} ${productGrade}
+        <input type="hidden" name="product_id" value="${productId}" />
+        <input type="hidden" name="storage_id" value="${storageId}" />
+      </td>
+      <td>${unitType}</td>
+      <td style="max-width: 60px">
+        <input type="text" name="price" class="form-control" value="${productPrice}" />
+      </td>
+      <td style="max-width: 60px">
+        <input type="text" name="quantity" class="form-control" value="1" />
+      </td>
+      <td style="max-width: 60px">
+        <input type="text" name="vat" class="form-control" value="19" />
+        <input type="hidden" name="product_vat_total" value="" />
+
+      </td>
+      <td>
+        <div class="d-flex align-items-center justify-content-end gap-2">
+          <div>0.0000 <span class="symbol">€</span></div>
+          <button type="button" class="btn btn-sm remove-btn">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+      </td>
+    `;
+        itemTableBody.prepend(productRow);
+        attachListeners(productRow);
+        calculateTotals();
+      }
+
+      document
+        .getElementById("addAddtionalItem")
+        .addEventListener("click", () => {
+          const serviceRow = document.createElement("tr");
+          serviceRow.setAttribute("data-type", "service");
+          serviceRow.innerHTML = `
+      <td>
+        <input type="text" name="name" class="form-control" value="Transportation" />
+      </td>
+      <td>
+        <select class="form-control">
+          <option value="srv">Service</option>
+          <option value="pcs">Piece</option> 
+        </select>
+      </td>
+      <td style="max-width: 60px">
+        <input type="text" name="price" class="form-control" value="0" />
+      </td>
+      <td style="max-width: 60px">
+        <input type="text" name="quantity" class="form-control" value="1" />
+      </td>
+      <td style="max-width: 60px">
+        <input type="text" name="vat" class="form-control" value="19" />
+        <input type="hidden" name="service_vat_total" />
+      </td>
+      <td>
+        <div class="d-flex align-items-center justify-content-end gap-2">
+          <div>0.0000 <span class="symbol">€</span></div>
+          <button type="button" class="btn btn-sm remove-btn">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+      </td>
+    `;
+          itemTableBody.appendChild(serviceRow);
+          attachListeners(serviceRow);
+          calculateTotals();
+        });
+
+      function attachListeners(row) {
+        const inputs = row.querySelectorAll("input");
+        inputs.forEach((input) => {
+          input.addEventListener("input", calculateTotals);
+        });
+        const removeBtn = row.querySelector(".remove-btn");
+        if (removeBtn) {
+          removeBtn.addEventListener("click", () => removeRow(removeBtn));
+        }
+      }
+
+      // Initial setup for existing rows
+      document.querySelectorAll("#itemTable .remove-btn").forEach((btn) => {
+        btn.addEventListener("click", () => removeRow(btn));
+      });
+      document.querySelectorAll("#itemTable input").forEach((input) => {
+        input.addEventListener("input", calculateTotals);
+      });
+    </script>
   </body>
 </html>

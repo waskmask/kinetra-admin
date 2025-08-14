@@ -595,6 +595,9 @@ form {
   .btn {
     min-width: 150px;
   }
+  .remove-btn {
+    min-width: 25px !important;
+  }
   .btn-removeImg {
     min-width: fit-content;
   }
